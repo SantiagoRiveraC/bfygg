@@ -39,19 +39,19 @@ export async function DELETE(req: Request, {params}: {params: {id: string}}) {
 }
 
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: Request, { params }: { params: { id?: string } }) {
     
     try {
         await dbConnect()
-
-        const { id } = params
-        if (!id) {
+        
+        if (!params?.id) {
             return NextResponse.json(
                 { mesaage: 'ID is required' },
                 { status: 400 }
             )
         }
-
+        
+        const { id } = params
         const body = await req.json()
         const user = await User.findById(id)
         if (!user) {
