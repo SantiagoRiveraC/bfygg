@@ -38,6 +38,43 @@ export async function DELETE(req: Request, {params}: {params: {id: string}}) {
     }
 }
 
+export async function GET(req: Request, { params }: { params: { id: string } }) {
+
+    try {
+        await dbConnect()
+
+        const { id } = params
+
+        if (!id) {
+            return NextResponse.json(
+                { mesaage: 'ID is required' },
+                { status: 400 }
+            )
+        }
+
+        const user = await User.findById(id)
+        if (user) {
+            return NextResponse.json(
+                {
+                    mesaage: 'User found successfully',
+                    user
+                },
+                { status: 400 }
+            )
+        } else {
+            return NextResponse.json(
+                { mesaage: 'User not found' },
+                { status: 400 }
+            )
+        }
+    } catch (error) {
+        return NextResponse.json(
+            { message: 'Internal Server Error', error },
+            { status: 500 }
+        )
+    }
+}
+
 
 export async function PUT(req: Request, { params }: { params: { id?: string } }) {
     
