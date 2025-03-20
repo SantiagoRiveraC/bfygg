@@ -19,6 +19,7 @@ export async function POST(req: Request) {
             )
         }
 
+
         const existingUser = await User.findOne({ email })
         if (existingUser) {
             return NextResponse.json(
@@ -39,6 +40,7 @@ export async function POST(req: Request) {
             membershipLevel: membershipLevel || 'basic'
         })
 
+        
         await newUser.save()
         return NextResponse.json(
             {
