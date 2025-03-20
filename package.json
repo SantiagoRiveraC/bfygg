@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
+    "jose": "^6.0.10",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.12.1",
     "next": "15.2.2",
     "postcss": "^8.5.3",
@@ -19,6 +21,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4.0.14",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
