@@ -1,15 +1,13 @@
 import Suscription from "@/models/Suscription";
 import dbConnect from "@/lib/db";
 import { NextResponse } from "next/server";
+import { RouteContext } from "@/utils/interfaces";
 
-export async function DELETE(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(req: Request, context: RouteContext) {
   try {
     await dbConnect();
 
-    const { id } = params;
+    const { id } = await context.params;
 
     if (!id) {
       return NextResponse.json({ mesaage: "ID is required" }, { status: 400 });
@@ -35,14 +33,11 @@ export async function DELETE(
   }
 }
 
-export async function PUT(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(req: Request, context: RouteContext) {
   try {
     await dbConnect();
 
-    const { id } = params;
+    const { id } = await context.params;
 
     if (!id) {
       return NextResponse.json({ mesaage: "ID is required" }, { status: 400 });
@@ -72,14 +67,11 @@ export async function PUT(
   }
 }
 
-export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(req: Request, context: RouteContext) {
   try {
     await dbConnect();
 
-    const { id } = params;
+    const { id } = await context.params;
 
     if (!id) {
       return NextResponse.json({ mesaage: "ID is required" }, { status: 400 });
