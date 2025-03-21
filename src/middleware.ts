@@ -16,8 +16,13 @@ export async function middleware(req: NextRequest) {
     }
 
     try {
-        await jwtVerify(token, secretKey);
-        return NextResponse.next()
+        const { payload } = await jwtVerify(token, secretKey);
+        const requestHeaders = new Headers(req.headers)
+        requestHeaders.set('X-user-id', payload.id as string)
+        requestHeaders.set('X-user-Role', payload.role as string)
+
+        return NextResponse.next({ request: { headers: requestHeaders}})
+        
     } catch (error) {
         console.log(error)
         return new NextResponse("Acceso denegado: Token inválido", { status: 403 });

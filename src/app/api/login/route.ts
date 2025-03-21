@@ -2,7 +2,8 @@ import User from "@/models/User";
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import bcrypt from "bcryptjs";
-import jwt from 'jsonwebtoken';
+// import jwt from 'jsonwebtoken';
+import {  SignJWT } from "jose";
 
 
 export async function POST(req: Request) {
@@ -20,6 +21,7 @@ export async function POST(req: Request) {
         }
 
         const user = await User.findOne({ email })
+
         if (!user) {
             return NextResponse.json(
                 { message: 'User does not exist, please register' },
@@ -35,12 +37,15 @@ export async function POST(req: Request) {
             )
         }
 
-        const token = jwt.sign(
-            { id: user._id },
-            process.env.SECRET!,
-            { expiresIn: '24h'}
-        )
 
+        const secretKey = new TextEncoder().encode(process.env.SECRET);
+
+        const token = await new SignJWT({ id: user._id.toString(), role: user.role })
+            .setProtectedHeader({ alg: "HS256" })
+            .setExpirationTime("24h")
+            .sign(secretKey);
+
+        
         return NextResponse.json(
             {
                 message: 'session started',

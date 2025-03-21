@@ -19,6 +19,7 @@ export async function POST(req: Request) {
             )
         }
 
+
         const existingUser = await User.findOne({ email })
         if (existingUser) {
             return NextResponse.json(
@@ -39,6 +40,7 @@ export async function POST(req: Request) {
             membershipLevel: membershipLevel || 'basic'
         })
 
+        
         await newUser.save()
         return NextResponse.json(
             {
@@ -48,6 +50,7 @@ export async function POST(req: Request) {
             { status: 201 }
         )
     } catch (error) {
+        
         return NextResponse.json(
             { message: 'Internal Server Error', error },
             { status: 500 }
