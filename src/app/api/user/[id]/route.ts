@@ -67,7 +67,7 @@ export async function PUT(req: Request, context: RouteContext) {
 
     const { id } = await context.params;
 
-    if (id) {
+    if (!id) {
       return NextResponse.json({ mesaage: "ID is required" }, { status: 400 });
     }
 
