@@ -51,3 +51,7 @@ export type FormErrors = {
   acceptTerms?: string;
   general?: string;
 };
+
+export interface RouteContext {
+  params: Promise<{ id: string }>;
+}

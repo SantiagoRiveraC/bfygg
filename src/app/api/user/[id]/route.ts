@@ -2,15 +2,13 @@ import User from "@/models/User";
 import dbConnect from "@/lib/db";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import { RouteContext } from "@/utils/interfaces";
 
-export async function DELETE(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(req: Request, context: RouteContext) {
   try {
     await dbConnect();
 
-    const { id } = await params;
+    const { id } = await context.params;
 
     if (!id) {
       return NextResponse.json({ message: "ID is required" }, { status: 400 });
@@ -33,31 +31,28 @@ export async function DELETE(
   }
 }
 
-export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: Request, context: RouteContext) {
   try {
     await dbConnect();
 
-    const { id } = await params;
+    const { id } = await context.params;
 
     if (!id) {
       return NextResponse.json({ mesaage: "ID is required" }, { status: 400 });
     }
 
     const user = await User.findById(id);
-    if (!user) {
+    if (user) {
+      return NextResponse.json(
+        {
+          mesaage: "User found successfully",
+          user,
+        },
+        { status: 400 }
+      );
+    } else {
       return NextResponse.json({ mesaage: "User not found" }, { status: 400 });
     }
-    
-    return NextResponse.json(
-      {
-        mesaage: "User found successfully",
-        user,
-      },
-      { status: 200 }
-    );
   } catch (error) {
     return NextResponse.json(
       { message: "Internal Server Error", error },
@@ -66,17 +61,13 @@ export async function GET(
   }
 }
 
-export async function PUT(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(req: Request, context: RouteContext) {
   try {
     await dbConnect();
-    debugger;
 
-    const { id } = await params;
+    const { id } = await context.params;
 
-    if (!id) {
+    if (id) {
       return NextResponse.json({ mesaage: "ID is required" }, { status: 400 });
     }
 
