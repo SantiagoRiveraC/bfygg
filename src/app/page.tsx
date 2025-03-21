@@ -47,7 +47,7 @@ export default function LandingPage() {
       </section>
 
       {/* Benefits Section */}
-      <section id="features" className="py-20 h-screen flex items-center">
+      <section id="features" className="py-20 md:h-screen flex items-center">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Why Choose Before You Gogo?</h2>
@@ -90,7 +90,7 @@ export default function LandingPage() {
       </section>
 
       {/* Membership Plans */}
-      <section id="pricing" className="bg-gray-50 py-20 h-screen flex items-center">
+      <section id="pricing" className="bg-gray-50 py-20 md:h-screen flex items-center">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Choose Your Membership Plan</h2>
@@ -202,7 +202,7 @@ export default function LandingPage() {
       </section>
 
       {/* Loyalty Program */}
-      <section id="loyalty" className="py-20 h-screen flex items-center">
+      <section id="loyalty" className="py-20 md:h-screen flex items-center">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
             <div className="grid gap-12 md:grid-cols-2 md:items-center">
@@ -330,7 +330,7 @@ export default function LandingPage() {
       </section>
 
       {/* Testimonials */}
-      <section id="about" className="bg-gray-50 py-20 h-screen flex items-center">
+      <section id="about" className="bg-gray-50 py-20 md:h-screen flex items-center">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">What Our Members Say</h2>
@@ -392,7 +392,7 @@ export default function LandingPage() {
       </section>
 
       {/* FAQ Section */}
-      <section id="contact" className="py-20 h-screen flex items-center">
+      <section id="contact" className="py-20 md:h-screen flex items-center">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Frequently Asked Questions</h2>
@@ -441,7 +441,7 @@ export default function LandingPage() {
       </section>
 
       {/* CTA Section */}
-      <section id="start" className="bg-gradient-to-br from-violet-600 to-purple-700 py-20 text-white h-screen flex items-center">
+      <section id="start" className="bg-gradient-to-br from-violet-600 to-purple-700 py-20 text-white md:h-screen flex items-center">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-4xl text-center">
             <h2 className="mb-6 text-3xl font-bold tracking-tight sm:text-4xl">Ready to Start Earning Rewards?</h2>
