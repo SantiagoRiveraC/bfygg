@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/db"
-import User from "@/models/User"
+import Product from "@/models/Product"
 import { NextResponse } from "next/server"
 
 
@@ -8,15 +8,15 @@ export async function GET() {
     try {
         await dbConnect()
         
-        const users = await User.find()
-        if (users) {
+        const Products = await Product.find()
+        if (Products) {
             return NextResponse.json(
-                { users },
+                { Products },
                 { status: 200}
             )
         } else {
             return NextResponse.json(
-                { message: 'Users didn´t found' },
+                { message: 'Products didn´t found' },
                 { status: 404}
             )
         }

@@ -1,8 +1,6 @@
-import User from "@/models/User";
+import Suscription from "@/models/Suscription";
 import dbConnect from "@/lib/db";
 import { NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
-
 
 export async function DELETE(req: Request, {params}: {params: {id: string}}) {
 
@@ -14,19 +12,19 @@ export async function DELETE(req: Request, {params}: {params: {id: string}}) {
         if (!id) {
             return NextResponse.json(
                 { mesaage: 'ID is required' },
-                { status: 400}
+                { status: 400 }
             )
         }
 
-        const deleteUser = await User.findByIdAndDelete(id)
-        if (!deleteUser) {
+        const deleteSuscription = await Suscription.findByIdAndDelete(id)
+        if (!deleteSuscription) {
             return NextResponse.json(
-                { mesaage: 'User not found' },
+                { mesaage: 'Suscription not found' },
                 { status: 400 }
             )
         } else {
             return NextResponse.json(
-                { mesaage: 'User deleted successfully' },
+                { mesaage: 'Suscription deleted successfully' },
                 { status: 400 }
             )
         }
@@ -39,8 +37,9 @@ export async function DELETE(req: Request, {params}: {params: {id: string}}) {
     }
 }
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
 
+export async function PUT(req: Request, { params }: { params: { id: string } }) {
+    
     try {
         await dbConnect()
 
@@ -52,23 +51,26 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
                 { status: 400 }
             )
         }
-
-        const user = await User.findById(id)
-        if (user) {
+        
+        const body = await req.json()
+        const suscription = await Suscription.findById(id)
+        if (!suscription) {
             return NextResponse.json(
-                {
-                    mesaage: 'User found successfully',
-                    user
-                },
-                { status: 400 }
-            )
-        } else {
-            return NextResponse.json(
-                { mesaage: 'User not found' },
-                { status: 400 }
+                { message: 'Suscription not found' },
+                { status: 404}
             )
         }
+
+        Object.assign(suscription, body)
+        
+        await suscription?.save()
+        return NextResponse.json(
+            { messaje: 'Suscription update successfully', suscription },
+            { status: 200 }
+        )
+
     } catch (error) {
+        
         return NextResponse.json(
             { message: 'Internal Server Error', error },
             { status: 500 }
@@ -76,42 +78,30 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     }
 }
 
-
-export async function PUT(req: Request, { params }: { params: { id?: string } }) {
+export async function GET(req: Request, { params }: { params: { id: string } }) {
     
     try {
         await dbConnect()
-        
-        if (!params?.id) {
+
+        const { id } = params
+
+        if (!id) {
             return NextResponse.json(
                 { mesaage: 'ID is required' },
                 { status: 400 }
             )
         }
-        
-        const { id } = params
-        const body = await req.json()
-        const user = await User.findById(id)
-        if (!user) {
+        const suscription = await Suscription.findById(id)
+        if (!suscription) {
             return NextResponse.json(
-                { message: 'User not found' },
+                { message: 'Suscription not found' },
                 { status: 404}
             )
         }
 
-        if (body.password) {
-            const samePass = bcrypt.compareSync(body.password, user.password)
-            if (!samePass) {
-                user.password = bcrypt.hashSync(body.password,10)
-            } 
-        }
-
-        Object.assign(user, body)
-        
-        await user.save()
         return NextResponse.json(
-            { messaje: ' User update successfully', user },
-            { status: 200}
+            { messaje: 'Suscription get successfully', suscription },
+            { status: 200 }
         )
 
     } catch (error) {
