@@ -1,38 +1,41 @@
 import dbConnect from "@/lib/db";
-import Product from "@/models/Product";
+import Suscription from "@/models/Suscription";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
     await dbConnect();
 
-    const { name, description, price, currency, availability } =
+    const { name, description, price, currency, billingCycle, benefits } =
       await req.json();
+      debugger;
 
-    if (!name || !description || !price || !currency || !availability) {
+    if (!name || !description || !price || !currency || !billingCycle || !benefits) {
       return NextResponse.json(
         { message: "Missing required fields" },
         { status: 400 }
       );
     }
 
-    const newProduct = new Product({
+    const newSuscription = new Suscription({
       name,
       description,
       price,
       currency,
-      availability,
+      billingCycle,
+      benefits
     });
 
-    await newProduct.save();
+    await newSuscription.save();
     return NextResponse.json(
       {
-        message: "Product created successfully",
-        newProduct,
+        message: "Suscription created successfully",
+        newSuscription,
       },
       { status: 201 }
     );
-  } catch (error) {   
+  } catch (error) {
+    
     return NextResponse.json(
       { message: "Internal Server Error", error },
       { status: 500 }

@@ -67,6 +67,7 @@ export async function GET(req: Request, { params }: { params: Promise< { id: str
             )
         }
     } catch (error) {
+        
         return NextResponse.json(
             { message: 'Internal Server Error', error },
             { status: 500 }
@@ -114,6 +115,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
         )
 
     } catch (error) {
+        
         return NextResponse.json(
             { message: 'Internal Server Error', error },
             { status: 500 }

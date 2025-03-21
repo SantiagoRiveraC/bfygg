@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/db"
-import User from "@/models/User"
+import Suscription from "@/models/Suscription"
 import { NextResponse } from "next/server"
 
 
@@ -8,15 +8,15 @@ export async function GET() {
     try {
         await dbConnect()
         
-        const users = await User.find()
-        if (users) {
+        const suscription = await Suscription.find()
+        if (suscription) {
             return NextResponse.json(
-                { users },
+                { suscription },
                 { status: 200}
             )
         } else {
             return NextResponse.json(
-                { message: 'Users didn´t found' },
+                { message: 'Suscription didn´t found' },
                 { status: 404}
             )
         }
