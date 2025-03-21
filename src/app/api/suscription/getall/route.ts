@@ -9,17 +9,17 @@ export async function GET() {
         await dbConnect()
         
         const suscription = await Suscription.find()
-        if (suscription) {
-            return NextResponse.json(
-                { suscription },
-                { status: 200}
-            )
-        } else {
+        if (!suscription) {
             return NextResponse.json(
                 { message: 'Suscription didn´t found' },
-                { status: 404}
+                { status: 404 }
             )
         }
+
+        return NextResponse.json(
+            { suscription },
+            { status: 200}
+        )
     } catch (error) {
         
         return NextResponse.json(

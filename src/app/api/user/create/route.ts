@@ -12,19 +12,18 @@ export async function POST(req: Request) {
 
         const { firstName, lastName, email, birthday, password, role, membershipLevel } = await req.json()
 
-        if (!firstName || !lastName || !email || !password || !birthday ) {
+        if (!firstName || !lastName || !email || !birthday || !password || !role || !membershipLevel) {
             return NextResponse.json(
                 { message: 'Missing required fields' },
                 { status: 400 }
             )
         }
 
-
         const existingUser = await User.findOne({ email })
         if (existingUser) {
             return NextResponse.json(
                 { message: 'user already exists' },
-                { status: 409 }
+                { status: 400 }
             )
         }
 

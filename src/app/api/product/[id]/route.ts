@@ -22,12 +22,12 @@ export async function DELETE(req: Request, {params}: {params: {id: string}}) {
                 { mesaage: 'Product not found' },
                 { status: 400 }
             )
-        } else {
-            return NextResponse.json(
-                { mesaage: 'Product deleted successfully' },
-                { status: 400 }
-            )
         }
+
+        return NextResponse.json(
+            { mesaage: 'Product deleted successfully' },
+            { status: 200 }
+        )
     } catch (error) {
         return NextResponse.json(
             { message: 'Internal Server Error', error },
@@ -43,6 +43,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
         await dbConnect()
 
         const { id } = params
+        const body = await req.json()
 
         if (!id) {
             return NextResponse.json(
@@ -51,7 +52,6 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
             )
         }
         
-        const body = await req.json()
         const product = await Product.findById(id)
         if (!product) {
             return NextResponse.json(
@@ -93,7 +93,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
         if (!product) {
             return NextResponse.json(
                 { message: 'Product not found' },
-                { status: 404}
+                { status: 404 }
             )
         }
 

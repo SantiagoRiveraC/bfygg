@@ -1,19 +1,17 @@
-"use client"
-
-import { useState } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { motion } from "framer-motion"
-import { Menu, X, User, ChevronDown } from 'lucide-react'
-
-import { Button } from "@/components/ui/button"
+"use client";
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
+import { Menu, X, User, ChevronDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { cn } from "@/lib/utils"
+} from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -21,12 +19,12 @@ const navLinks = [
   { name: "Pricing", href: "#pricing" },
   { name: "About", href: "#about" },
   { name: "Contact", href: "#contact" },
-]
+];
 
 export default function Navbar() {
-  const pathname = usePathname()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState(false) // Replace with actual auth state
+  const pathname = usePathname();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Replace with actual auth state
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white shadow-sm">
@@ -34,7 +32,9 @@ export default function Navbar() {
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-2">
           <div className="h-8 w-8 rounded-full bg-gradient-to-r from-violet-500 to-purple-600"></div>
-          <span className="text-xl font-bold text-gray-900">Before you gogo</span>
+          <span className="text-xl font-bold text-gray-900">
+            Before you gogo
+          </span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -45,9 +45,7 @@ export default function Navbar() {
               href={link.href}
               className={cn(
                 "relative text-sm font-medium transition-colors hover:text-violet-600",
-                pathname === link.href
-                  ? "text-violet-600"
-                  : "text-gray-700"
+                pathname === link.href ? "text-violet-600" : "text-gray-700"
               )}
             >
               {link.name}
@@ -180,8 +178,8 @@ export default function Navbar() {
                 <button
                   className="block w-full rounded-md px-3 py-2 text-left text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-violet-600"
                   onClick={() => {
-                    setIsLoggedIn(false)
-                    setMobileMenuOpen(false)
+                    setIsLoggedIn(false);
+                    setMobileMenuOpen(false);
                   }}
                 >
                   Logout
@@ -192,5 +190,5 @@ export default function Navbar() {
         </motion.div>
       )}
     </header>
-  )
+  );
 }

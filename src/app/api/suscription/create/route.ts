@@ -8,7 +8,6 @@ export async function POST(req: Request) {
 
     const { name, description, price, currency, billingCycle, benefits } =
       await req.json();
-      debugger;
 
     if (!name || !description || !price || !currency || !billingCycle || !benefits) {
       return NextResponse.json(

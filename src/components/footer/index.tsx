@@ -1,6 +1,5 @@
 import Link from "next/link"
 import { Facebook, Twitter, Instagram, Linkedin, ArrowRight } from "lucide-react"
-
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
