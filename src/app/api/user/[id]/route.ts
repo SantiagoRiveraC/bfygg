@@ -4,29 +4,65 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 
 
-export async function DELETE(req: Request, {params}: {params: {id: string}}) {
+export async function DELETE(req: Request, {params}: { params: Promise<{ id: string }> }) {
+    try {
+        await dbConnect();
+
+        const { id } = await params;
+
+        if (!id) {
+            return NextResponse.json(
+                { message: "ID is required" },
+                { status: 400 }
+            );
+        }
+
+        const deleteUser = await User.findByIdAndDelete(id);
+        if (!deleteUser) {
+            return NextResponse.json(
+                { message: 'User not found' },
+                { status: 400 }
+            );
+        }
+
+        return NextResponse.json(
+            { message: 'User deleted successfully' },
+            { status: 200 }
+        );
+    } catch (error) {
+        return NextResponse.json(
+            { message: 'Internal Server Error', error },
+            { status: 500 }
+        );
+    }
+}
+
+export async function GET(req: Request, { params }: { params: Promise< { id: string }> }) {
 
     try {
         await dbConnect()
 
-        const { id } = params
+        const { id } = await params
 
         if (!id) {
             return NextResponse.json(
                 { mesaage: 'ID is required' },
-                { status: 400}
+                { status: 400 }
             )
         }
 
-        const deleteUser = await User.findByIdAndDelete(id)
-        if (!deleteUser) {
+        const user = await User.findById(id)
+        if (user) {
             return NextResponse.json(
-                { mesaage: 'User not found' },
+                {
+                    mesaage: 'User found successfully',
+                    user
+                },
                 { status: 400 }
             )
         } else {
             return NextResponse.json(
-                { mesaage: 'User deleted successfully' },
+                { mesaage: 'User not found' },
                 { status: 400 }
             )
         }
@@ -40,19 +76,20 @@ export async function DELETE(req: Request, {params}: {params: {id: string}}) {
 }
 
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
     
     try {
         await dbConnect()
-
-        const { id } = params
-        if (!id) {
+        
+        const { id } = await params
+        
+        if (id) {
             return NextResponse.json(
                 { mesaage: 'ID is required' },
                 { status: 400 }
             )
         }
-
+        
         const body = await req.json()
         const user = await User.findById(id)
         if (!user) {

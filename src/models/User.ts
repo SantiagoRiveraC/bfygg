@@ -20,7 +20,7 @@ const UserSchema = new Schema<User>(
 		firstName: { type: String, required: true, trim: true },
 		lastName: { type: String, required: true, trim: true },
 		email: { type: String, required: true, unique: true, lowercase: true },
-		password: { type: String, required: true, select: false },
+		password: { type: String, required: true },
 		birthday: { type: String, required: true }, 
 		role: { type: String, enum: ['member', 'affiliate', 'admin'], default: 'member' },
 		membershipLevel: { type: String, enum: ['basic', 'premium', 'vip'] },
