@@ -2,7 +2,7 @@ import type React from "react";
 import { Inter } from "next/font/google";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
-import { UserProvider } from "@/context/UserContext";
+import { AuthProvider } from "@/context/AuthContext";
 
 import "./globals.css";
 
@@ -20,7 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <UserProvider>
+      <AuthProvider>
         <body className={inter.className}>
           <div className="flex min-h-screen flex-col">
             <Navbar />
@@ -28,7 +28,7 @@ export default function RootLayout({
             <Footer />
           </div>
         </body>
-      </UserProvider>
+      </AuthProvider>
     </html>
   );
 }

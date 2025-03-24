@@ -13,7 +13,7 @@ import {
 
 import { useRouter } from "next/navigation";
 
-export interface UserContextType {
+export interface AuthContextType {
   user: User | null;
   login: (formData: { email: string, password: string, rememberMe: boolean }) => Promise<void>;
   isLoading: boolean;
@@ -21,19 +21,19 @@ export interface UserContextType {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const UserContext = createContext<UserContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function UserProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setAuth] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
   const token = localStorage.getItem("token");
 
-  const fetchUser = async () => {
-    const storedUser = decodeJWT(token);
+  const fetchAuth = async () => {
+    const storedAuth = decodeJWT(token);
 
-    if (storedUser) {
-      const { id } = storedUser;
+    if (storedAuth) {
+      const { id } = storedAuth;
 
       try {
         const headers = {
@@ -41,7 +41,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         };
         const res = await axios.get(`/api/user/${id}`, headers);
         const { user } = res.data;
-        setUser(user);
+        setAuth(user);
       } catch (error) {
         console.error("Error fetching user:", error);
       }
@@ -50,7 +50,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (token) {
-      fetchUser();
+      fetchAuth();
     }
   }, []);
 
@@ -72,22 +72,22 @@ export function UserProvider({ children }: { children: ReactNode }) {
   }
 
   const logout = () => {
-    setUser(null);
+    setAuth(null);
     localStorage.removeItem("token");
     router.push("/login");
   };
 
   return (
-    <UserContext.Provider value={{ user, login, logout, isLoading, setIsLoading }}>
+    <AuthContext.Provider value={{ user, login, logout, isLoading, setIsLoading }}>
       {children}
-    </UserContext.Provider>
+    </AuthContext.Provider>
   );
 }
 
-export function useUser() {
-  const context = useContext(UserContext);
+export function useAuth() {
+  const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useUser debe usarse dentro de un UserProvider");
+    throw new Error("useAuth debe usarse dentro de un AuthProvider");
   }
   return context;
 }

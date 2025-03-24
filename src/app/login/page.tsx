@@ -1,10 +1,10 @@
 "use client";
 import React, { useState } from "react";
 import LoginForm from "@/components/login-form";
-import { useUser } from "@/context/UserContext";
+import { useAuth } from "@/context/AuthContext";
 
 export default function LoginPage() {
-  const { login, isLoading, setIsLoading } = useUser();
+  const { login, isLoading, setIsLoading } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
