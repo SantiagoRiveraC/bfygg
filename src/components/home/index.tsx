@@ -85,7 +85,7 @@ export default function LandingPage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-white text-white hover:bg-white/20"
+                className="border-white text-violet-700 hover:bg-white/20"
               >
                 Learn More
               </Button>
@@ -99,7 +99,7 @@ export default function LandingPage() {
       <section id="features" className="py-20 md:h-screen flex items-center">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-400 sm:text-4xl">
               Why Choose Before You Gogo?
             </h2>
             <p className="mt-4 text-lg text-gray-600">
@@ -142,7 +142,7 @@ export default function LandingPage() {
                 <div className="mb-4 rounded-full bg-violet-100 p-3">
                   {benefit.icon}
                 </div>
-                <h3 className="mb-2 text-xl font-semibold text-gray-900">
+                <h3 className="mb-2 text-xl font-semibold text-gray-400">
                   {benefit.title}
                 </h3>
                 <p className="text-gray-600">{benefit.description}</p>
@@ -159,7 +159,7 @@ export default function LandingPage() {
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-400 sm:text-4xl">
               Choose Your Membership Plan
             </h2>
             <p className="mt-4 text-lg text-gray-600">
@@ -281,7 +281,7 @@ export default function LandingPage() {
                 <Badge className="mb-4 bg-violet-100 text-violet-800 hover:bg-violet-200">
                   Loyalty Program
                 </Badge>
-                <h2 className="mb-6 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+                <h2 className="mb-6 text-3xl font-bold tracking-tight text-gray-400 sm:text-4xl">
                   Earn Points, Unlock Rewards
                 </h2>
                 <p className="mb-6 text-lg text-gray-600">
@@ -319,7 +319,7 @@ export default function LandingPage() {
                         )}
                       </div>
                       <div>
-                        <h3 className="text-lg font-medium text-gray-900">
+                        <h3 className="text-lg font-medium text-gray-400">
                           {item.title}
                         </h3>
                         <p className="text-gray-600">{item.description}</p>
@@ -338,7 +338,7 @@ export default function LandingPage() {
                 <div className="relative overflow-hidden rounded-xl border border-gray-200 bg-white p-6 shadow-lg">
                   <div className="mb-6 flex items-center justify-between">
                     <div>
-                      <h3 className="text-xl font-bold text-gray-900">
+                      <h3 className="text-xl font-bold text-gray-400">
                         Rewards Dashboard
                       </h3>
                       <p className="text-sm text-gray-600">Premium Member</p>
@@ -359,7 +359,7 @@ export default function LandingPage() {
                   </div>
 
                   <div className="mb-6 space-y-4">
-                    <h4 className="font-medium text-gray-900">
+                    <h4 className="font-medium text-gray-400">
                       Available Rewards
                     </h4>
                     {[
@@ -430,7 +430,7 @@ export default function LandingPage() {
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-400 sm:text-4xl">
               What Our Members Say
             </h2>
             <p className="mt-4 text-lg text-gray-600">
@@ -487,7 +487,7 @@ export default function LandingPage() {
                     className="mr-4 rounded-full"
                   />
                   <div>
-                    <h4 className="font-medium text-gray-900">
+                    <h4 className="font-medium text-gray-400">
                       {testimonial.author}
                     </h4>
                     <p className="text-sm text-gray-600">{testimonial.role}</p>
@@ -503,7 +503,7 @@ export default function LandingPage() {
       <section id="contact" className="py-20 md:h-screen flex items-center">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-400 sm:text-4xl">
               Frequently Asked Questions
             </h2>
             <p className="mt-4 text-lg text-gray-600">
@@ -580,7 +580,7 @@ export default function LandingPage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-white text-white hover:bg-white/20"
+                className="border-white text-violet-700 hover:bg-white/20"
               >
                 View Membership Plans
               </Button>
