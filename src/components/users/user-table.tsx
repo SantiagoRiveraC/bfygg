@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge"
 
 type User = {
   id: number
-  name: string
+  firstName: string
   email: string
   role: string
   status: string
@@ -22,7 +22,9 @@ type UserTableProps = {
 }
 
 export default function UserTable({ users }: UserTableProps) {
-  const [sortField, setSortField] = useState<keyof User>("name")
+
+
+  const [sortField, setSortField] = useState<keyof User>("firstName")
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc")
 
   const handleSort = (field: keyof User) => {
@@ -49,7 +51,7 @@ export default function UserTable({ users }: UserTableProps) {
   })
 
   const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
+    switch (status?.toLowerCase()) {
       case "active":
         return "bg-green-100 text-green-800 hover:bg-green-200"
       case "inactive":
@@ -74,11 +76,11 @@ export default function UserTable({ users }: UserTableProps) {
             <th
               scope="col"
               className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-              onClick={() => handleSort("name")}
+              onClick={() => handleSort("firstName")}
             >
               <div className="flex items-center">
                 Name
-                <SortIcon field="name" />
+                <SortIcon field="firstName" />
               </div>
             </th>
             <th
@@ -131,7 +133,7 @@ export default function UserTable({ users }: UserTableProps) {
             sortedUsers.map((user) => (
               <tr key={user.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm font-medium text-gray-900">{user.name}</div>
+                  <div className="text-sm font-medium text-gray-900">{user.firstName}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-500">{user.email}</div>
@@ -145,11 +147,11 @@ export default function UserTable({ users }: UserTableProps) {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {user.lastLogin ? formatDistanceToNow(new Date(user.lastLogin), { addSuffix: true }) : "Never"}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium ">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="link" size="sm">
-                        <MoreHorizontal className="h-4 w-4" />
+                      <Button className="border cursor-pointer" variant="link" size="sm">
+                        <MoreHorizontal className="h-4 w-4 " />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
