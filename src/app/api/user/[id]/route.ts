@@ -48,7 +48,7 @@ export async function GET(req: Request, context: RouteContext) {
           mesaage: "User found successfully",
           user,
         },
-        { status: 400 }
+        { status: 200 }
       );
     } else {
       return NextResponse.json({ mesaage: "User not found" }, { status: 400 });

@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { useUser } from "@/context/UserContext";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -24,7 +25,7 @@ const navLinks = [
 export default function Navbar() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Replace with actual auth state
+  const { user, logout } = useUser();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white shadow-sm">
@@ -62,19 +63,19 @@ export default function Navbar() {
 
         {/* User Menu / Login Button */}
         <div className="hidden md:block">
-          {isLoggedIn ? (
+          {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center space-x-1">
+                <Button variant="ghost" className="flex items-center bg-violet-500 space-x-1">
                   <User className="h-4 w-4" />
-                  <span>My Account</span>
+                  <span>{user?.firstName}</span>
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem>Profile</DropdownMenuItem>
                 <DropdownMenuItem>Settings</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setIsLoggedIn(false)}>
+                <DropdownMenuItem onClick={() => logout()}>
                   Logout
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -142,7 +143,7 @@ export default function Navbar() {
                 {link.name}
               </Link>
             ))}
-            {!isLoggedIn ? (
+            {!user ? (
               <div className="mt-4 flex flex-col space-y-2">
                 <Link
                   href="/login"
@@ -178,8 +179,7 @@ export default function Navbar() {
                 <button
                   className="block w-full rounded-md px-3 py-2 text-left text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-violet-600"
                   onClick={() => {
-                    setIsLoggedIn(false);
-                    setMobileMenuOpen(false);
+                    logout();
                   }}
                 >
                   Logout
