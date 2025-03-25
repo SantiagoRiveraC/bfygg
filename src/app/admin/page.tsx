@@ -8,7 +8,6 @@ import axios from 'axios'
 
 
 
-
 export default function AdminPage() {
 
 	const [ searchTerm, setSearchTerm] = useState("")
