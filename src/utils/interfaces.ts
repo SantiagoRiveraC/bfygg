@@ -6,14 +6,16 @@ export interface MongooseConnection {
 }
 
 export interface User {
-  id: number,
-  firstName: string,
-  email: string,
-  role: string,
-  status: string,
-  lastLogin: string,
-  createdAt: string,
+  _id: string
+	firstName: string
+	email: string
+	role: string
+	status: string
+	lastLogin: string | null
+	createdAt: string
+	subscriptionStatus: boolean
 }
+
 export interface ILoginForm {
   isLoading: boolean;
   showPassword: boolean;

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 
 import { useEffect, useState } from "react"
@@ -5,7 +6,7 @@ import AdminUserPanel from "@/components/admin/admin-user-panel"
 import { User } from "@/utils/interfaces"
 import axios from 'axios'
 
-// Mock user data
+
 
 
 export default function AdminPage() {
@@ -13,7 +14,7 @@ export default function AdminPage() {
 	const [ searchTerm, setSearchTerm] = useState("")
 	const [users, setUser] = useState<User[]>([])
 	
-	const token = 'eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY3ZGRlMDYxNDkzNTZjYWJhNTMyYWU5MCIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc0MjkxMjE0NH0.ca7uMyaKPFezJH63iAcdKzJG6pLZ-4Z2kbtAEWmoiu8'
+	const token = 'eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY3ZTE4MzM2MWViNTE0ZDYyODE1N2Q2NyIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc0MzAwMDU4MH0.1tyuuFe4moqYcI1GpAqsZ7wOP4EGJqAfzXk4v9nQ5mQ'
 	const headers = { headers: { Authorization: `Bearer ${token}` } }
 
 	const getUsers = async () => {
@@ -24,7 +25,7 @@ export default function AdminPage() {
 			console.log(error)	
 		}
 	}
-	console.log(users)
+	// console.log(users)
 
 	// Filter users based on search term
 	const filteredUsers = users.filter((user: User) => 
@@ -33,6 +34,16 @@ export default function AdminPage() {
 			user.role.toLowerCase().includes(searchTerm.toLowerCase()),	
 	)
 
+
+	const handleEdit = (id: string) => {
+		
+		console.log(id)
+	}
+
+	const handleDelete = (id: string) => {
+		console.log(id)
+	}
+	
 
 
 	useEffect(
@@ -48,6 +59,8 @@ export default function AdminPage() {
 			searchTerm={searchTerm}
 			setSearchTerm={setSearchTerm}
 			filteredUsers={filteredUsers}
+			handleEdit={handleEdit}
+			handleDelete={handleDelete}
 		/>
 	)
 }
