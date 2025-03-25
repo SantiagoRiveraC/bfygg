@@ -1,11 +1,10 @@
 "use client";
 import React, { useState } from "react";
 import LoginForm from "@/components/login-form";
-import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 export default function LoginPage() {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  const { login, isLoading, setIsLoading } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -26,14 +25,10 @@ export default function LoginPage() {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate API call
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      // Handle successful login
-      router.push("/dashboard");
+      login(formData); // Asegurar que login termine antes de continuar
     } catch (error) {
-      console.error("Login failed:", error);
-    } finally {
+      console.error("Error logging in:", error);
       setIsLoading(false);
     }
   };
