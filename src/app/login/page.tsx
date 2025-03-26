@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import LoginForm from "@/components/login-form";
 import { useAuth } from "@/context/AuthContext";
+import { Toaster } from "react-hot-toast";
 
 export default function LoginPage() {
   const { login, isLoading, setIsLoading } = useAuth();
@@ -34,14 +35,17 @@ export default function LoginPage() {
   };
 
   return (
-    <LoginForm
-      handleSubmit={handleSubmit}
-      isLoading={isLoading}
-      showPassword={showPassword}
-      setShowPassword={setShowPassword}
-      formData={formData}
-      handleChange={handleChange}
-      handleCheckboxChange={handleCheckboxChange}
-    />
+    <>
+      <LoginForm
+        handleSubmit={handleSubmit}
+        isLoading={isLoading}
+        showPassword={showPassword}
+        setShowPassword={setShowPassword}
+        formData={formData}
+        handleChange={handleChange}
+        handleCheckboxChange={handleCheckboxChange}
+      />
+      <Toaster />
+    </>
   );
 }

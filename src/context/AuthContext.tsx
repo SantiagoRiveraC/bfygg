@@ -1,8 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import User from "@/models/User";
 import { decodeJWT } from "@/utils/decodeJWT";
-import axios from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import {
   createContext,
   useContext,
@@ -10,8 +11,11 @@ import {
   useEffect,
   ReactNode,
 } from "react";
+import { useUsers } from "./usersContext";
 
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+// import { error } from "console";
 
 export interface AuthContextType {
   user: User | null;
@@ -24,8 +28,11 @@ export interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+
+
   const [user, setAuth] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { handleGetAllUsers } = useUsers()
   const router = useRouter();
   const token = localStorage.getItem("token");
 
@@ -54,27 +61,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const login = async (formData: {
+  const login =  (formData: {
     email: string;
     password: string;
     rememberMe: boolean;
   }) => {
-    try {
-      const res = await axios.post("/api/login", formData);
-      localStorage.setItem("token", res.data.token);
-      window.location.href = "/admin";
-    } catch (error) {
-      console.error("Login failed:", error);
-      setIsLoading(false);
-    } finally {
-      setIsLoading(false);
-    }
+
+    const promise = axios.post("/api/login", formData)
+    toast.promise(
+      promise,
+      {
+        loading: 'logging in...',
+        success: (res: AxiosResponse) => {
+          localStorage.setItem("token", res.data.token);
+          handleGetAllUsers()
+          window.location.replace('/admin')
+          // router.push('/admin')
+          return <>{ res.data.message}</>
+        },
+        error: (error: AxiosError<{ message?: string }>) => {
+          return <>{ error.response?.data.message}</>
+        }
+      }
+    )
   }
 
   const logout = () => {
     setAuth(null);
     localStorage.removeItem("token");
-    router.push("/login");
+    router.push("/");
   };
 
   return (

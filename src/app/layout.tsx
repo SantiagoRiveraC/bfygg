@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import { AuthProvider } from "@/context/AuthContext";
+import { UsersProvider } from "@/context/usersContext";
 
 import "./globals.css";
 
@@ -21,13 +22,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <AuthProvider>
-        <body className={inter.className}>
-          <div className="flex min-h-screen flex-col">
-            <Navbar />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
-        </body>
+        <UsersProvider>
+          <body className={inter.className}>
+            <div className="flex min-h-screen flex-col">
+              <Navbar />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </div>
+          </body>
+        </UsersProvider>
       </AuthProvider>
     </html>
   );

@@ -9,7 +9,7 @@ export async function GET() {
     const users = await User.find();
     if (!users) {
       return NextResponse.json(
-        { message: "Users didn´t found" },
+        { message: "Users didn't found" },
         { status: 404 }
       );
     }

@@ -45,7 +45,7 @@ export default function LoginForm({
           transition={{ duration: 0.5 }}
         >
           <Card className="overflow-hidden border-violet-200 shadow-lg">
-            <CardHeader className="bg-gradient-to-r from-violet-500 to-purple-600 pb-6 pt-8 text-white">
+            <CardHeader className="bg-gradient-to-r from-violet-500 to-purple-600 p-3 text-white">
               <CardTitle className="text-center text-2xl">Sign In</CardTitle>
               <CardDescription className="text-center text-violet-100">
                 Enter your credentials to access your account
