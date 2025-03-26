@@ -4,6 +4,7 @@ import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import { AuthProvider } from "@/context/AuthContext";
 import { UsersProvider } from "@/context/usersContext";
+import { IdProvider } from "@/context/captureIDContext";
 
 import "./globals.css";
 
@@ -22,15 +23,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <AuthProvider>
-        <UsersProvider>
-          <body className={inter.className}>
-            <div className="flex min-h-screen flex-col">
-              <Navbar />
-              <main className="flex-1">{children}</main>
-              <Footer />
-            </div>
-          </body>
-        </UsersProvider>
+        <IdProvider>
+          <UsersProvider>
+            <body className={inter.className}>
+              <div className="flex min-h-screen flex-col">
+                <Navbar />
+                <main className="flex-1">{children}</main>
+                <Footer />
+              </div>
+            </body>
+          </UsersProvider>
+        </IdProvider>
       </AuthProvider>
     </html>
   );

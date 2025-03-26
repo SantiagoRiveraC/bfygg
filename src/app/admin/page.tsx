@@ -8,7 +8,8 @@ import { toast, Toaster } from 'react-hot-toast'
 import { useUsers } from '@/context/usersContext';
 import { Button, Typography } from '@mui/material';
 import { Trash } from '@phosphor-icons/react';
-
+import { useId } from '@/context/captureIDContext';
+import { useRouter } from 'next/navigation';
 
 
 
@@ -16,11 +17,12 @@ export default function AdminPage() {
 
 	const [searchTerm, setSearchTerm] = useState("")
 	const { users, handleDeleteUser } = useUsers()
+	const { setId } = useId()
+	const router = useRouter()
 
 	
 	const filteredUsers = users.filter((user: User) => {
 		const lowerSearch = searchTerm.toLowerCase();
-
 		return (
 			user.firstName?.toLowerCase().includes(lowerSearch) ||
 			user.email?.toLowerCase().includes(lowerSearch) ||
@@ -30,7 +32,8 @@ export default function AdminPage() {
 
 
 	const handleEdit = (id: string) => {
-
+		setId(id)
+		router.push('/user-edit-form')
 		console.log(id)
 	}
 
