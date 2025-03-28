@@ -61,7 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const login =  (formData: {
+  const login =  async (formData: {
     email: string;
     password: string;
     rememberMe: boolean;

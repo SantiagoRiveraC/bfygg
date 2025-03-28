@@ -24,7 +24,7 @@ export interface User {
 }
 
 export interface ILoginForm {
-	isLoading: boolean;
+	// isLoading: boolean;
 	showPassword: boolean;
 	setShowPassword: (value: boolean) => void;
 	formData: {
@@ -54,11 +54,12 @@ export interface ISignUpForm {
 }
 
 export type FormData = {
-	name: string;
+	firstName: string;
+	lastName: string;
 	email: string;
 	password: string;
 	confirmPassword: string;
-	acceptTerms: boolean;
+	birthday: string;
 };
 
 export type FormErrors = {

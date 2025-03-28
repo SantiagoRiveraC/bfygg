@@ -5,7 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { Toaster } from "react-hot-toast";
 
 export default function LoginPage() {
-  const { login, isLoading, setIsLoading } = useAuth();
+  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -24,13 +24,13 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+    // setIsLoading(true);
 
     try {
       login(formData); // Asegurar que login termine antes de continuar
     } catch (error) {
       console.error("Error logging in:", error);
-      setIsLoading(false);
+      // setIsLoading(false);
     }
   };
 
@@ -38,7 +38,7 @@ export default function LoginPage() {
     <>
       <LoginForm
         handleSubmit={handleSubmit}
-        isLoading={isLoading}
+        // isLoading={isLoading}
         showPassword={showPassword}
         setShowPassword={setShowPassword}
         formData={formData}

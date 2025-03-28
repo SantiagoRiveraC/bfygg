@@ -34,7 +34,7 @@ export default function AdminPage() {
 	const handleEdit = (id: string) => {
 		setId(id)
 		router.push('/user-edit-form')
-		console.log(id)
+		// console.log(id)
 	}
 
 

@@ -3,47 +3,50 @@
 import type React from "react"
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { Eye, EyeOff, Loader2 } from "lucide-react"
+import { Eye, EyeOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { cn } from "@/lib/utils"
-import { useUsers } from "@/context/usersContext"
-import { useId } from "@/context/captureIDContext"
-
-export default function UserEditForm() {
+import { User } from "@/utils/interfaces"
 
 
-	const [isLoading, setIsLoading] = useState(false)
+
+
+
+export default function UserEditForm({ user }: { user?: User }) {
+
+
+	// const [isLoading, setIsLoading] = useState(false)
 	const [showPassword, setShowPassword] = useState(false)
 	const [subscriptionStatus, setSubscriptionStatus] = useState(false)
-	const { users } = useUsers()
-	const { id } = useId()
-	const userTest = users?.find( item => item._id === id)
-	const [role, setRole] = useState(userTest?.role)
-	const [membershipLevel, setMembershipLevel] = useState(userTest?.membershipLevel)
+	// const { users } = useUsers()
+	// const { id } = useId()
+	// const user = users?.find( item => item._id === id)
+	const [role, setRole] = useState(user?.role)
+	const [membershipLevel, setMembershipLevel] = useState(user?.membershipLevel)
 
-	console.log(id)
-	// console.log(userTest)
+	// console.log(id)
+	// console.log(user)
 	// Función de envío simulada
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault()
-		setIsLoading(true)
+		// setIsLoading(true)
 		// Simulación de envío
 		setTimeout(() => {
-		setIsLoading(false)
+		// setIsLoading(false)
 		}, 1500)
 	}
 
 	useEffect(() => {
-		if (userTest?.role && userTest?.membershipLevel) {
-			setRole(userTest.role);
-			setMembershipLevel(userTest.membershipLevel)
+		if (user?.role && user?.membershipLevel) {
+			setRole(user.role);
+			setMembershipLevel(user.membershipLevel)
 		}
-	}, [userTest]);
+	}, [user]);
 
 
 
@@ -54,7 +57,7 @@ export default function UserEditForm() {
 			<motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
 			<Card className="overflow-hidden border-violet-200 shadow-lg">
 				<CardHeader className="bg-gradient-to-r from-violet-500 to-purple-600 py-5 text-white">
-							<CardTitle className="text-center text-xl">Edit {userTest?.firstName} {userTest?.lastName}</CardTitle>
+							<CardTitle className="text-center text-xl">Edit {user?.firstName} {user?.lastName}</CardTitle>
 					<CardDescription className="text-center text-violet-100">Update user account information</CardDescription>
 				</CardHeader>
 				<CardContent className="p-5">
@@ -75,7 +78,7 @@ export default function UserEditForm() {
 								type="text"
 								placeholder="First Name"
 								className="border-violet-200 focus-visible:ring-violet-500 h-9"
-								defaultValue={userTest?.firstName}
+								defaultValue={user?.firstName}
 							/>
 							</div>
 
@@ -90,7 +93,7 @@ export default function UserEditForm() {
 								type="text"
 								placeholder="Last Name"
 								className="border-violet-200 focus-visible:ring-violet-500 h-9"
-								defaultValue={userTest?.lastName}
+								defaultValue={user?.lastName}
 							/>
 							</div>
 
@@ -105,7 +108,7 @@ export default function UserEditForm() {
 								type="email"
 								placeholder="email"
 								className="border-violet-200 focus-visible:ring-violet-500 h-9"
-								defaultValue={userTest?.email}
+								defaultValue={user?.email}
 							/>
 							</div>
 
@@ -121,7 +124,6 @@ export default function UserEditForm() {
 									type={showPassword ? "text" : "password"}
 									placeholder="password"
 									className="border-violet-200 pr-10 focus-visible:ring-violet-500 h-9"
-									defaultValue={userTest?.password}
 								/>
 								<button
 									type="button"
@@ -129,7 +131,7 @@ export default function UserEditForm() {
 									className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-violet-600"
 									aria-label={showPassword ? "Hide password" : "Show password"}
 									>
-									{showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+										{showPassword ?   <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
 								</button>
 							</div>
 							</div>
@@ -144,7 +146,7 @@ export default function UserEditForm() {
 								name="birthday"
 								type="date"
 								className="border-violet-200 focus-visible:ring-violet-500 h-9"
-								defaultValue={userTest?.birthday}
+								defaultValue={user?.birthday}
 							/>
 							</div>
 						</div>
@@ -201,7 +203,7 @@ export default function UserEditForm() {
 								type="number"
 								placeholder="0"
 								className="border-violet-200 focus-visible:ring-violet-500 h-9"
-								defaultValue={userTest?.loyaltyPoints}
+								defaultValue={user?.loyaltyPoints}
 							/>
 							</div>
 
@@ -216,7 +218,7 @@ export default function UserEditForm() {
 								type="text"
 								placeholder="ABC123"
 								className="border-violet-200 focus-visible:ring-violet-500 h-9"
-								defaultValue={userTest?.referralCode}
+								defaultValue={user?.referralCode}
 
 							/>
 							</div>
@@ -242,7 +244,7 @@ export default function UserEditForm() {
 								</Label>
 								<Switch
 									id="subscriptionStatus"
-									defaultChecked={userTest?.subscriptionStatus ? true : false}
+									defaultChecked={user?.subscriptionStatus ? true : false}
 									onCheckedChange={setSubscriptionStatus}
 									className="data-[state=checked]:bg-violet-600 cursor-pointer"
 								/>
@@ -256,28 +258,21 @@ export default function UserEditForm() {
 						<div className="mt-5">
 						<Button
 							type="submit"
-							disabled={isLoading}
 							className={cn(
-							"w-full bg-violet-600 text-white hover:bg-violet-700 h-9",
-							"transition-all duration-200 ease-in-out",
-							"focus:ring-violet-500",
+								"w-full bg-violet-600 text-white hover:bg-violet-700 h-9",
+								"transition-all duration-200 ease-in-out",
+								"focus:ring-violet-500",
+								'cursor-pointer'
 							)}
 						>
-							{isLoading ? (
-							<>
-								<Loader2 className="mr-2 h-4 w-4 animate-spin" />
-								Updating user...
-							</>
-							) : (
-							"Save Changes"
-							)}
+							Save Changes
 						</Button>
 						</div>
 					</form>
 				</CardContent>
-				<CardFooter className="flex justify-center border-t bg-gray-50 py-3">
+				{/* <CardFooter className="flex justify-center border-t bg-gray-50 py-3">
 				<p className="text-sm text-gray-600">All fields marked with * are required</p>
-				</CardFooter>
+				</CardFooter> */}
 			</Card>
 			</motion.div>
 		</div>

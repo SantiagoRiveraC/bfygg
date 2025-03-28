@@ -2,7 +2,7 @@
 import type React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Eye, EyeOff, Github, Loader2 } from "lucide-react";
+import { Eye, EyeOff, Github } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -21,7 +21,7 @@ import { ILoginForm } from "@/utils/interfaces";
 
 export default function LoginForm({
   handleSubmit,
-  isLoading,
+  // isLoading,
   showPassword,
   setShowPassword,
   formData,
@@ -123,21 +123,21 @@ export default function LoginForm({
                 </div>
                 <Button
                   type="submit"
-                  disabled={isLoading}
+                  // disabled={isLoading}
                   className={cn(
                     "mt-2 w-full bg-violet-600 text-white hover:bg-violet-700",
                     "transition-all duration-200 ease-in-out",
                     "focus:ring-violet-500"
                   )}
                 >
-                  {isLoading ? (
+                  {/* {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Signing in...
                     </>
                   ) : (
-                    "Sign in"
-                  )}
+                    )} */}
+                    Sign in
                 </Button>
               </form>
               <div className="relative flex items-center justify-center">
