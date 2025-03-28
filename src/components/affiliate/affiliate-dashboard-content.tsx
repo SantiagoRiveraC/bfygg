@@ -4,7 +4,9 @@ import { useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useAffiliateData } from "@/hooks/use-affiliate-data"
 import DashboardHeader from "@/components/affiliate/dashboard-header"
+import StatsOverview from "@/components/affiliate/stats-overview"
 import LinkGenerator from "@/components/affiliate/link-generator"
+import PerformanceCharts from "@/components/affiliate/performance-charts"
 import GeneratedLinks from "@/components/affiliate/generated-links"
 // import { useToast } from "@/hooks/use-toast"
 import type { AffiliateLink } from "@/types"
@@ -15,8 +17,8 @@ export default function AffiliateDashboardContent() {
   const [activeTab, setActiveTab] = useState("overview")
 
   const handleLinkGenerated = (newLink: AffiliateLink) => {
-    // In a real app, this would call an API to save the link
     console.log(newLink)
+    // In a real app, this would call an API to save the link
 
     // toast({
     //   title: "Link generated successfully",
@@ -47,12 +49,16 @@ export default function AffiliateDashboardContent() {
       <DashboardHeader user={affiliateData?.user} isLoading={isLoading} />
 
       <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="mt-8">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="generate">Generate Links</TabsTrigger>
-          <TabsTrigger value="performance">Performance</TabsTrigger>
           <TabsTrigger value="links">My Links</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="overview" className="mt-6">
+          <StatsOverview stats={affiliateData?.stats} isLoading={isLoading} />
+          <PerformanceCharts performanceData={affiliateData?.performanceData} isLoading={isLoading} className="mt-8" />
+        </TabsContent>
 
         <TabsContent value="generate" className="mt-6">
           <LinkGenerator
@@ -63,7 +69,6 @@ export default function AffiliateDashboardContent() {
             onLinkShared={handleLinkShared}
           />
         </TabsContent>
-
         <TabsContent value="links" className="mt-6">
           <GeneratedLinks
             links={affiliateData?.generatedLinks}
