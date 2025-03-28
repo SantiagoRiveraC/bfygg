@@ -9,11 +9,16 @@ export default function AdminUserPanel({
     searchTerm,
     setSearchTerm,
     filteredUsers,
+    handleEdit,
+    handleDelete
 }: {
     users: User[],
     searchTerm: string,
     setSearchTerm: (searchTerm: string) => void
     filteredUsers: User[]
+    handleEdit: (id: string) => void
+    handleDelete: (id: string) => void
+
 }) {
 
     return (
@@ -43,7 +48,11 @@ export default function AdminUserPanel({
                         </div>
                     </div>
 
-                    <UserTable users={filteredUsers} />
+                    <UserTable 
+                        handleEdit={handleEdit} 
+                        handleDelete={handleDelete} 
+                        users={filteredUsers} 
+                    />
                 </div>
             </div>
         </div>

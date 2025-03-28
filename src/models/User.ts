@@ -11,9 +11,13 @@ interface User extends Document {
 	loyaltyPoints?: number
 	referralCode?: string
 	referredBy?: mongoose.Types.ObjectId
-	subscriptionStatus?: 'active' | 'inactive' | 'cancelled'
 	subscriptionExpiration?: Date,
+	subscriptionStatus: boolean,
+	createAt: Date,
+	updateAt: Date
 }
+
+
 
 const UserSchema = new Schema<User>(
 	{
@@ -27,8 +31,8 @@ const UserSchema = new Schema<User>(
 		loyaltyPoints: { type: Number, default: 0 },
 		referralCode: { type: String, unique: true, sparse: true },
 		referredBy: { type: Schema.Types.ObjectId, ref: 'User' }, 
-		subscriptionStatus: { type: String, enum: ['active', 'inactive', 'cancelled'], default: 'inactive' },
 		subscriptionExpiration: { type: Date },
+		subscriptionStatus: { type: Boolean, default: true}
 	}, {
 		timestamps: true,
 		versionKey: false

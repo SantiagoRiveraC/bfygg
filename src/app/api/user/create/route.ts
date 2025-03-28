@@ -12,7 +12,7 @@ export async function POST(req: Request) {
 
         const { firstName, lastName, email, birthday, password, role, membershipLevel } = await req.json()
 
-        if (!firstName || !lastName || !email || !birthday || !password || !role || !membershipLevel) {
+        if (!firstName || !lastName || !email || !birthday || !password ) {
             return NextResponse.json(
                 { message: 'Missing required fields' },
                 { status: 400 }
