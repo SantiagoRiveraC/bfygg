@@ -3,7 +3,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { Menu, X, User, ChevronDown } from "lucide-react";
+import { Menu, ChevronDown, X } from "lucide-react";
+import DashboardHeader from "@/components/affiliate/dashboard-header";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -13,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
+import { useAffiliateData } from "@/hooks/use-affiliate-data";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -24,6 +26,8 @@ const navLinks = [
 
 export default function Navbar() {
   const pathname = usePathname();
+  const { affiliateData, isLoading } = useAffiliateData();
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, logout } = useAuth();
 
@@ -66,11 +70,13 @@ export default function Navbar() {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center bg-violet-500 space-x-1">
-                  <User className="h-4 w-4" />
-                  <span>{user?.firstName}</span>
-                  <ChevronDown className="h-4 w-4" />
-                </Button>
+                  <div className="flex gap-[1rem] items-center">
+                    <DashboardHeader
+                      user={affiliateData?.user}
+                      isLoading={isLoading}
+                    />
+                    <ChevronDown className="h-6 w-6 text-violet-600" aria-hidden="true" />
+                  </div>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem>Profile</DropdownMenuItem>

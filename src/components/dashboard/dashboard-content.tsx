@@ -3,7 +3,6 @@
 import { useState } from "react"
 import { useUserData } from "@/hooks/use-user-data"
 import { useProducts } from "@/hooks/use-products"
-import DashboardHeader from "@/components/dashboard/dashboard-header"
 import PointsCard from "@/components/dashboard/points-card"
 import ProductGrid from "@/components/dashboard/product-grid"
 import RedeemModal from "@/components/dashboard/redeem-modal"
@@ -53,8 +52,6 @@ export default function DashboardContent() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <DashboardHeader user={user} isLoading={isUserLoading} />
-
       <div className="mt-8 grid gap-8 md:grid-cols-3">
         <div className="md:col-span-1">
           <PointsCard user={user} isLoading={isUserLoading} />

@@ -65,7 +65,7 @@ export default function RedeemModal({ isOpen, onClose, product, userPoints, onCo
         {!confirmStep ? (
           <>
             <DialogHeader>
-              <DialogTitle>Redeem Product</DialogTitle>
+              <DialogTitle className="text-black">Redeem Product</DialogTitle>
               <DialogDescription>Choose how you would like to redeem this product.</DialogDescription>
             </DialogHeader>
 
@@ -81,7 +81,7 @@ export default function RedeemModal({ isOpen, onClose, product, userPoints, onCo
               </div>
 
               <div>
-                <h4 className="font-medium">{product.title}</h4>
+                <h4 className="font-medium text-gray-900">{product.title}</h4>
                 <div className="mt-1 flex items-center gap-4">
                   <p className="text-sm font-medium text-gray-900">${product.price.toFixed(2)}</p>
                   <p className="text-sm text-violet-600">{product.pointsPrice?.toLocaleString()} points</p>
@@ -140,8 +140,8 @@ export default function RedeemModal({ isOpen, onClose, product, userPoints, onCo
               </Alert>
             )}
 
-            <DialogFooter className="gap-2 sm:gap-0">
-              <Button variant="outline" onClick={handleClose}>
+            <DialogFooter className="gap-2">
+              <Button variant="outline" onClick={handleClose} className="border border-violet-600 text-violet-600">
                 Cancel
               </Button>
               <Button onClick={handleContinue} className="bg-violet-600 hover:bg-violet-700">

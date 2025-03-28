@@ -60,7 +60,7 @@ const fetchProducts = async (): Promise<Product[]> => {
     },
     {
       id: "prod6",
-      title: "Premium Wine Tasting Experience",
+      title: "Wine Tasting Experience",
       description: "Guided wine tasting experience with a selection of premium wines and gourmet pairings.",
       image: "/placeholder.svg?height=300&width=400",
       price: 89.99,
