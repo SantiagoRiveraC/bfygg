@@ -42,7 +42,7 @@ export default function ProductCard({ product, onRedeemClick }: ProductCardProps
             <p className="text-lg font-bold text-gray-900">${price.toFixed(2)}</p>
             <div className="flex items-center text-sm text-violet-600">
               <Gift className="mr-1 h-4 w-4" />
-              <span>{pointsPrice.toLocaleString()} points</span>
+              <span>{pointsPrice} points</span>
             </div>
           </div>
         </div>
