@@ -32,7 +32,6 @@ export interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  console.log("AuthProvider children:", children);
   const [user, setAuth] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { handleGetAllUsers } = useUsers();

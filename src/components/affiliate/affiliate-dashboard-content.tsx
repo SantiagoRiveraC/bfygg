@@ -21,13 +21,11 @@ export default function AffiliateDashboardContent() {
 
   const handleLinkCopied = () => {
     toast.success('link copied', { style: { textTransform: 'capitalize'}})
-
   }
 
   const handleLinkShared = (platform: string) => {
     console.log(platform)
     toast.success('link shared', { style: { textTransform: 'capitalize'}})
-
   }
 
   return (

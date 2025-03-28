@@ -42,8 +42,6 @@ export default function Page() {
 				}
 			}
 		)
-
-		console.log(data)
 	}
 	
 

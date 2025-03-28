@@ -42,7 +42,7 @@ export default function DashboardContent() {
       mutateUser()
     } else {
       // Handle payment with real money (would redirect to checkout in a real app)
-      console.log("Redirecting to payment gateway...")
+      // console.log("Redirecting to payment gateway...")
       // This would typically redirect to a checkout page
     }
 

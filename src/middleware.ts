@@ -27,8 +27,8 @@ export async function middleware(req: NextRequest) {
 
         return NextResponse.next({ request: { headers: requestHeaders}})
         
-    } catch (error) {
-        console.log(error)
+    } catch {
+        // console.log(error)
         return new NextResponse("Acceso denegado: Token inválido", { status: 403 });
     }
 }

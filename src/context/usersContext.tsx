@@ -39,21 +39,21 @@ export function UsersProvider({ children }: { children: ReactNode }) {
 
   const handleGetAllUsers = async () => {
     if (!token) {
-      console.log("token is requiered");
+      // console.log("token is requiered");
       return;
     }
     try {
       const res = await axios.get("/api/user/getall", headers);
       setUsers(res.data.users);
-    } catch (error) {
-      console.log(error);
+    } catch {
+      // console.log(error);
       setUsers([]);
     }
   };
 
   const handleDeleteUser = async (id: string) => {
     if (!token) {
-      console.log("token is requiered");
+      // console.log("token is requiered");
     }
     const promise = axios.delete(`/api/user/${id}`, headers);
     toast.promise(promise, {
