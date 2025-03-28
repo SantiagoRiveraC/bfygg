@@ -1,4 +1,4 @@
-import { Users, UserCheck, UserX, Clock } from "lucide-react"
+import { Users, UserCheck, UserX } from "lucide-react"
 import { User } from '@/utils/interfaces'
 
 type UserStatsProps = {
@@ -6,16 +6,12 @@ type UserStatsProps = {
 }
 
 export default function UserStats({ users }: UserStatsProps) {
+
 	const totalUsers = users.length
 	const activeUsers = users.filter((user) => user.subscriptionStatus === true).length
 	const inactiveUsers = users.filter((user) => user.subscriptionStatus === false).length
 
-	/* 	const newUsersThisMonth = users.filter((user) => {
-			const createdDate = user.createAt
-			const now = new Date()
-			return createdDate.getMonth() === now.getMonth() && createdDate.getFullYear() === now.getFullYear()
-		}).length
-	 */
+	
 	const stats = [
 		{
 			title: "Total Users",
@@ -35,12 +31,6 @@ export default function UserStats({ users }: UserStatsProps) {
 			icon: UserX,
 			color: "bg-red-100 text-red-800",
 		},
-		/* 		{
-					title: "New This Month",
-					value: newUsersThisMonth,
-					icon: Clock,
-					color: "bg-purple-100 text-purple-800",
-				}, */
 	]
 
 	return (

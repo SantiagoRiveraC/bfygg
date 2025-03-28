@@ -20,24 +20,14 @@ import { User } from "@/utils/interfaces"
 export default function UserEditForm({ user }: { user?: User }) {
 
 
-	// const [isLoading, setIsLoading] = useState(false)
 	const [showPassword, setShowPassword] = useState(false)
 	const [subscriptionStatus, setSubscriptionStatus] = useState(false)
-	// const { users } = useUsers()
-	// const { id } = useId()
-	// const user = users?.find( item => item._id === id)
 	const [role, setRole] = useState(user?.role)
 	const [membershipLevel, setMembershipLevel] = useState(user?.membershipLevel)
 
-	// console.log(id)
-	// console.log(user)
-	// Función de envío simulada
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault()
-		// setIsLoading(true)
-		// Simulación de envío
 		setTimeout(() => {
-		// setIsLoading(false)
 		}, 1500)
 	}
 
@@ -270,9 +260,6 @@ export default function UserEditForm({ user }: { user?: User }) {
 						</div>
 					</form>
 				</CardContent>
-				{/* <CardFooter className="flex justify-center border-t bg-gray-50 py-3">
-				<p className="text-sm text-gray-600">All fields marked with * are required</p>
-				</CardFooter> */}
 			</Card>
 			</motion.div>
 		</div>

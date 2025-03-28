@@ -1,6 +1,5 @@
 "use client"
 
-// import axios from 'axios'
 import { useState } from 'react';
 import AdminUserPanel from "@/components/admin/admin-user-panel"
 import { User } from "@/utils/interfaces"
@@ -34,12 +33,10 @@ export default function AdminPage() {
 	const handleEdit = (id: string) => {
 		setId(id)
 		router.push('/user-edit-form')
-		// console.log(id)
 	}
 
 
 	const handleDelete = (id: string) => {
-		console.log(id)
 		const user = users.find(item => item._id === id)
 		toast(() => (
 			<div className='w-[10rem] flex flex-col items-center gap-2 capitalize'>

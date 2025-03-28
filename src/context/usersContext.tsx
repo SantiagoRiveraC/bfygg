@@ -28,7 +28,6 @@ export function UsersProvider({ children }: { children: ReactNode }) {
         }
         try {
             const res = await axios.get('/api/user/getall', headers)
-            // console.log(res)
             setUsers(res.data.users)
 
         } catch (error) {
