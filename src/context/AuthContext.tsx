@@ -19,7 +19,11 @@ import toast from "react-hot-toast";
 
 export interface AuthContextType {
   user: User | null;
-  login: (formData: { email: string, password: string, rememberMe: boolean }) => Promise<void>;
+  login: (formData: {
+    email: string;
+    password: string;
+    rememberMe: boolean;
+  }) => Promise<void>;
   isLoading: boolean;
   logout: () => void;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -28,13 +32,16 @@ export interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-
-
   const [user, setAuth] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { handleGetAllUsers } = useUsers()
+  const { handleGetAllUsers } = useUsers();
   const router = useRouter();
-  const token = localStorage.getItem("token");
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    setToken(storedToken);
+  }, []);
 
   const fetchAuth = async () => {
     const storedAuth = decodeJWT(token);
@@ -59,32 +66,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (token) {
       fetchAuth();
     }
-  }, []);
+  }, [token]);
 
-  const login =  async (formData: {
+  const login = async (formData: {
     email: string;
     password: string;
     rememberMe: boolean;
   }) => {
-
-    const promise = axios.post("/api/login", formData)
-    toast.promise(
-      promise,
-      {
-        loading: 'logging in...',
-        success: (res: AxiosResponse) => {
-          localStorage.setItem("token", res.data.token);
-          handleGetAllUsers()
-          window.location.replace('/admin')
-          // router.push('/admin')
-          return <>{ res.data.message}</>
-        },
-        error: (error: AxiosError<{ message?: string }>) => {
-          return <>{ error.response?.data.message}</>
-        }
-      }
-    )
-  }
+    const promise = axios.post("/api/login", formData);
+    toast.promise(promise, {
+      loading: "logging in...",
+      success: (res: AxiosResponse) => {
+        localStorage.setItem("token", res.data.token);
+        handleGetAllUsers();
+        window.location.replace("/admin/dashboard");
+        // router.push('/admin')
+        return <>{res.data.message}</>;
+      },
+      error: (error: AxiosError<{ message?: string }>) => {
+        return <>{error.response?.data.message}</>;
+      },
+    });
+  };
 
   const logout = () => {
     setAuth(null);
@@ -93,7 +96,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading, setIsLoading }}>
+    <AuthContext.Provider
+      value={{ user, login, logout, isLoading, setIsLoading }}
+    >
       {children}
     </AuthContext.Provider>
   );
