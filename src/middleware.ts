@@ -13,7 +13,6 @@ export async function middleware(req: NextRequest) {
     const secretKey = new TextEncoder().encode(process.env.SECRET);
 
     const token = req.headers.get("Authorization")?.split(" ")[1];
-    // console.log(token)
 
     if (!token) {
         return new NextResponse("Unauthorized", { status: 401 });
@@ -28,12 +27,14 @@ export async function middleware(req: NextRequest) {
         return NextResponse.next({ request: { headers: requestHeaders}})
         
     } catch {
-        // console.log(error)
         return new NextResponse("Acceso denegado: Token inválido", { status: 403 });
     }
 }
 
 export const config = {
-    matcher: "/api/user/:path*",
+    matcher: [
+        "/api/user/:path*",
+        "/api/user/auth"
+    ]
     // matcher: ["/api/user/:path*", "!/api/user/create"],
 };

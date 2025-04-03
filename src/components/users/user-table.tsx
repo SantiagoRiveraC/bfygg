@@ -17,10 +17,10 @@ type UserTableProps = {
 
 export default function UserTable({ users, handleDelete, handleEdit }: UserTableProps) {
 
-	const [sortField, setSortField] = useState<keyof User | "subscriptionStatus">("firstName")
+	const [sortField, setSortField] = useState<keyof User | "membership.status">("firstName")
 	const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc")
 
-	const handleSort = (field: keyof User | "subscriptionStatus") => {
+	const handleSort = (field: keyof User | "membership.status") => {
 		if (sortField === field) {
 			setSortDirection(sortDirection === "asc" ? "desc" : "asc")
 		} else {
@@ -30,39 +30,49 @@ export default function UserTable({ users, handleDelete, handleEdit }: UserTable
 	}
 
 
-	const sortedUsers = [...users].sort((a, b) => {
-		const aValue = a[sortField]
-		const bValue = b[sortField]
 
-		if (aValue === null || aValue === undefined) return 1
-		if (bValue === null || bValue === undefined) return -1
+	const sortedUsers = [...users].sort((a, b) => {
+		// Función helper para obtener valores de campos normales o anidados
+		const getSortValue = (user: User, field: keyof User | "membership.status") => {
+			if (field === "membership.status") {
+				return user.membership?.status;
+			}
+			return user[field];
+		};
+
+		const aValue = getSortValue(a, sortField);
+		const bValue = getSortValue(b, sortField);
+
+		// Lógica de comparación
+		if (aValue === null || aValue === undefined) return 1;
+		if (bValue === null || bValue === undefined) return -1;
 
 		if (aValue instanceof Date && bValue instanceof Date) {
 			return sortDirection === "asc"
 				? aValue.getTime() - bValue.getTime()
-				: bValue.getTime() - aValue.getTime()
+				: bValue.getTime() - aValue.getTime();
 		}
 
 		if (typeof aValue === "boolean" && typeof bValue === "boolean") {
 			return sortDirection === "asc"
 				? Number(aValue) - Number(bValue)
-				: Number(bValue) - Number(aValue)
+				: Number(bValue) - Number(aValue);
 		}
 
 		if (typeof aValue === "string" && typeof bValue === "string") {
-			return sortDirection === "asc" ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue)
+			return sortDirection === "asc"
+				? aValue.localeCompare(bValue)
+				: bValue.localeCompare(aValue);
 		}
 
 		if (typeof aValue === "number" && typeof bValue === "number") {
-			return sortDirection === "asc" ? aValue - bValue : bValue - aValue
+			return sortDirection === "asc" ? aValue - bValue : bValue - aValue;
 		}
 
-		return 0
-	})
+		return 0;
+	});
 
-
-
-	const getStatusColor = (status: boolean) => {
+	const getStatusColor = (status: boolean | undefined) => {
 		return status ? "bg-green-100 text-green-800 hover:bg-green-200" : "bg-gray-100 text-gray-800 hover:bg-gray-200"
 	}
 
@@ -109,7 +119,7 @@ export default function UserTable({ users, handleDelete, handleEdit }: UserTable
 						<th
 							scope="col"
 							className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-							onClick={() => handleSort("subscriptionStatus")}
+							onClick={() => handleSort("membership.status")}
 						>
 							<div className="flex items-center">
 								Status
@@ -126,7 +136,7 @@ export default function UserTable({ users, handleDelete, handleEdit }: UserTable
 						sortedUsers.map((user) => (
 							<tr key={user._id} className="hover:bg-gray-50">
 								<td className="px-6 py-4 whitespace-nowrap">
-									<div className="text-sm font-medium text-gray-900">{user.firstName}</div>
+									<div className="text-sm font-medium text-gray-900 capitalize">{user.firstName}</div>
 								</td>
 								<td className="px-6 py-4 whitespace-nowrap">
 									<div className="text-sm text-gray-500">{user.email}</div>
@@ -135,8 +145,8 @@ export default function UserTable({ users, handleDelete, handleEdit }: UserTable
 									<div className="text-sm text-gray-500">{user.role}</div>
 								</td>
 								<td className="px-6 py-4 whitespace-nowrap">
-									<Badge className={getStatusColor(user.subscriptionStatus)}>
-										{user.subscriptionStatus ? "active" : "inactive"}
+									<Badge className={getStatusColor(user?.membership?.status)}>
+										{user?.membership?.status ? "active" : "inactive"}
 									</Badge>
 								</td>
 								<td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

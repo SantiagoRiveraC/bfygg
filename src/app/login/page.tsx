@@ -1,51 +1,49 @@
 "use client";
 import React, { useState } from "react";
 import LoginForm from "@/components/login-form";
-import { useAuth } from "@/context/AuthContext";
 import { Toaster } from "react-hot-toast";
+import { useUsers } from "@/context/usersContext";
+
+
+
 
 export default function LoginPage() {
-  const { login } = useAuth();
-  const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    rememberMe: false,
-  });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+	const [showPassword, setShowPassword] = useState(false);
+	const { handleLogin } = useUsers()
 
-  const handleCheckboxChange = (checked: boolean) => {
-    setFormData((prev) => ({ ...prev, rememberMe: checked }));
-  };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    // setIsLoading(true);
+	const [formData, setFormData] = useState({
+		email: "",
+		password: "",
+	});
 
-    try {
-      login(formData); // Asegurar que login termine antes de continuar
-    } catch (error) {
-      console.error("Error logging in:", error);
-      // setIsLoading(false);
-    }
-  };
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = e.target;
+		setFormData((prev) => ({ ...prev, [name]: value }));
+	};
 
-  return (
-    <>
-      <LoginForm
-        handleSubmit={handleSubmit}
-        // isLoading={isLoading}
-        showPassword={showPassword}
-        setShowPassword={setShowPassword}
-        formData={formData}
-        handleChange={handleChange}
-        handleCheckboxChange={handleCheckboxChange}
-      />
-      <Toaster />
-    </>
-  );
+	const handleCheckboxChange = (checked: boolean) => {
+		setFormData((prev) => ({ ...prev, rememberMe: checked }));
+	};
+
+	const handleSubmit = async (e: React.FormEvent) => {
+		e.preventDefault();
+		handleLogin(formData)
+	};
+
+return (
+	<>
+		<LoginForm
+			handleSubmit={handleSubmit}
+			// isLoading={isLoading}
+			showPassword={showPassword}
+			setShowPassword={setShowPassword}
+			formData={formData}
+			handleChange={handleChange}
+			handleCheckboxChange={handleCheckboxChange}
+		/>
+		<Toaster />
+	</>
+);
 }

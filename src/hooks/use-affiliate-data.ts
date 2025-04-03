@@ -75,7 +75,7 @@ const fetchAffiliateData = async (): Promise<AffiliateData> => {
   return {
     user: {
       id: "user123",
-      name: "Alex Johnson",
+      name: "a Johnson",
       email: "alex@example.com",
       avatar: "/placeholder.svg?height=40&width=40",
     },

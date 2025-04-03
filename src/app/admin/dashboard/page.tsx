@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AdminUserPanel from "@/components/admin/admin-user-panel"
 import { User } from "@/utils/interfaces"
 import { toast, Toaster } from 'react-hot-toast'
@@ -15,7 +16,7 @@ import { useRouter } from 'next/navigation';
 export default function AdminPage() {
 
 	const [searchTerm, setSearchTerm] = useState("")
-	const { users, handleDeleteUser } = useUsers()
+	const { users, handleDeleteUser, handleGetAllUsers } = useUsers()
 	const { setId } = useId()
 	const router = useRouter()
 
@@ -52,6 +53,13 @@ export default function AdminPage() {
 		))
 	}
 	
+
+	useEffect(
+		() => {
+			handleGetAllUsers()
+		},
+		[]
+	)
 
 	return (
 		<>

@@ -2,17 +2,17 @@ import User from "@/models/User";
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import bcrypt from "bcryptjs";
-// import jwt from 'jsonwebtoken';
 import {  SignJWT } from "jose";
 
 
 export async function POST(req: Request) {
- 
+    
+
     try {
         await dbConnect()
 
         const { email, password } = await req.json()
-
+        
         if (!email?.trim() || !password?.trim()) {
             return NextResponse.json(
                 { message: 'Missing required fields' },
@@ -21,7 +21,6 @@ export async function POST(req: Request) {
         }
 
         const user = await User.findOne({ email })
-
         if (!user) {
             return NextResponse.json(
                 { message: 'User does not exist, please register' },
@@ -50,13 +49,12 @@ export async function POST(req: Request) {
             {
                 message: 'session started',
                 token,
-                // user
+                user
             },
             { status: 200}
         )
 
     } catch (error) {
-        // console.log(error)
         return NextResponse.json(
             { message: 'Internal Server Error', error },
             { status: 500 }
