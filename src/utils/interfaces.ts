@@ -58,7 +58,6 @@ export interface ILoginForm {
 	formData: {
 		email: string;
 		password: string;
-		// rememberMe: boolean;
 	};
 	handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	handleCheckboxChange: (checked: boolean) => void;

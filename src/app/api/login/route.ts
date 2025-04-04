@@ -7,12 +7,9 @@ import {  SignJWT } from "jose";
 
 export async function POST(req: Request) {
     
-
     try {
         await dbConnect()
-
         const { email, password } = await req.json()
-        
         if (!email?.trim() || !password?.trim()) {
             return NextResponse.json(
                 { message: 'Missing required fields' },
@@ -36,7 +33,6 @@ export async function POST(req: Request) {
             )
         }
 
-
         const secretKey = new TextEncoder().encode(process.env.SECRET);
 
         const token = await new SignJWT({ id: user._id.toString(), role: user.role })
@@ -44,7 +40,6 @@ export async function POST(req: Request) {
             .setExpirationTime("24h")
             .sign(secretKey);
 
-        
         return NextResponse.json(
             {
                 message: 'session started',

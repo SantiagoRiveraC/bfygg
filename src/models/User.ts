@@ -14,13 +14,13 @@ interface User extends Document {
 	// MEMBERS DATA
 	membership?: {
 		level: 'basic' | 'premium' | 'vip';
-		subscriptionExpiration: Date;  // ¡Ahora está dentro de membership!
+		subscriptionExpiration: Date; 
 		status: boolean;
 		loyaltyPoints: number;
 		vacationVouchers?: Array<{
-		voucherId: Types.ObjectId;
-		expirationDate: Date;
-		isActive: boolean;
+			voucherId: Types.ObjectId;
+			expirationDate: Date;
+			isActive: boolean;
 		}>;
 	};
 
@@ -30,9 +30,9 @@ interface User extends Document {
 		referredBy?: Types.ObjectId;
 		commissionRate: number;
 		earnings?: {
-		total: number;
-		paid: number;
-		pending: number;
+			total: number;
+			paid: number;
+			pending: number;
 		};
 	};
 }
@@ -68,9 +68,9 @@ const UserSchema = new Schema<User>(
 			},
 			vacationVouchers: [{
 				voucherId: { 
-				type: Schema.Types.ObjectId, 
-				ref: 'Voucher',
-				required: true 
+					type: Schema.Types.ObjectId, 
+					ref: 'Voucher',
+					required: true 
 				},
 				expirationDate: { type: Date },
 				isActive: { type: Boolean, default: true }

@@ -9,7 +9,7 @@ import { UserEditFormData } from "@/utils/interfaces"
 export default function Page() {
 
     const { id } = useId()
-    const { users,handleEditUser } = useUsers()
+    const { users, handleEditUser } = useUsers()
     const user = users.find(item => item._id === id)
 
     const handleSubmit = (formData: UserEditFormData) => {
