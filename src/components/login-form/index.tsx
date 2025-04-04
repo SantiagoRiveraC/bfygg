@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Eye, EyeOff, Github } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+// import { Checkbox } from "@/components/ui/checkbox";
 import {
   Card,
   CardContent,
@@ -26,7 +26,7 @@ export default function LoginForm({
   setShowPassword,
   formData,
   handleChange,
-  handleCheckboxChange,
+  // handleCheckboxChange,
 }: ILoginForm) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
@@ -99,8 +99,8 @@ export default function LoginForm({
                     </button>
                   </div>
                 </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
+                <div className="flex justify-end">
+                  {/* <div className="flex items-center space-x-2">
                     <Checkbox
                       id="remember"
                       checked={formData.rememberMe}
@@ -113,7 +113,7 @@ export default function LoginForm({
                     >
                       Remember me
                     </Label>
-                  </div>
+                  </div> */}
                   <Link
                     href="/forgot-password"
                     className="text-sm font-medium text-violet-600 hover:text-violet-800"

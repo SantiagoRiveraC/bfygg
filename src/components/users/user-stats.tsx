@@ -8,8 +8,8 @@ type UserStatsProps = {
 export default function UserStats({ users }: UserStatsProps) {
 
 	const totalUsers = users.length
-	const activeUsers = users.filter((user) => user.subscriptionStatus === true).length
-	const inactiveUsers = users.filter((user) => user.subscriptionStatus === false).length
+	const activeUsers = users.filter((user) => user.membership?.status === true).length
+	const inactiveUsers = users.filter((user) => user.membership?.status === false).length
 
 	
 	const stats = [

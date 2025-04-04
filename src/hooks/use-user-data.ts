@@ -9,7 +9,7 @@ const fetchUserData = async (): Promise<User> => {
   // Return mock user data
   return {
     id: "user123",
-    name: "Alex Johnson",
+    name: "Alejo Johnson",
     email: "alex@example.com",
     avatar: "/placeholder.svg?height=40&width=40",
     loyaltyPoints: 2450,

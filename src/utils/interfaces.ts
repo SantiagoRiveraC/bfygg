@@ -1,26 +1,54 @@
-import { Mongoose } from "mongoose";
+import { Mongoose, Types } from "mongoose";
+import LoginForm from '../components/login-form/index';
 
 export interface MongooseConnection {
 	conn: Mongoose | null;
 	promise: Promise<Mongoose> | null;
 }
 
+
 export interface User {
-	_id: string
-	firstName: string
-	lastName: string
+	// BASIC DATA
+	_id: string;
+	firstName: string;
+	lastName: string;
+	email: string;
+	password: string;
+	birthday: string;
+	role: 'member' | 'affiliate' | 'admin';
+	createdAt: Date;
+	updatedAt: Date;
+
+	// MEMBER DATA
+	membership?: {
+		level: 'basic' | 'premium' | 'vip';
+		subscriptionExpiration: Date;
+		status: boolean;
+		loyaltyPoints: number;
+		vacationVouchers?: Array<{
+			voucherId: Types.ObjectId;
+			expirationDate?: Date;
+			isActive: boolean;
+		}>;
+	};
+
+	// AFFILIATE DATA
+	affiliate?: {
+		referralCode: string;
+		referredBy?: Types.ObjectId;
+		commissionRate: number;
+		earnings?: {
+			total: number;
+			paid: number;
+			pending: number;
+		};
+	};
+}
+
+
+export interface LoginForm {
 	email: string
 	password: string
-	birthday: string
-	role: string
-	membershipLevel: string
-	loyaltyPoints: number
-	referralCode: string
-	referredBy: string
-	subscriptionExpiration: Date
-	subscriptionStatus: boolean
-	createAt: Date
-	updateAt: Date
 }
 
 export interface ILoginForm {
@@ -30,7 +58,6 @@ export interface ILoginForm {
 	formData: {
 		email: string;
 		password: string;
-		rememberMe: boolean;
 	};
 	handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	handleCheckboxChange: (checked: boolean) => void;
@@ -51,6 +78,26 @@ export interface ISignUpForm {
 	passwordStrength: number;
 	getStrengthColor: () => string;
 	getStrengthText: () => string;
+}
+
+
+export interface UserEditFormData {
+	// Basic info
+	firstName: string;
+	lastName: string;
+	email: string;
+	password: string;
+	birthday: string;
+	role: 'member' | 'affiliate' | 'admin';
+
+	// Membership
+	membershipLevel: 'basic' | 'premium' | 'vip';
+	subscriptionExpiration: string; 
+	subscriptionStatus: boolean;
+	loyaltyPoints: number;
+
+	// Affiliate
+	referralCode: string;
 }
 
 export type FormData = {
