@@ -8,13 +8,14 @@ interface User extends Document {
 	password: string;
 	birthday: string;
 	role: 'member' | 'affiliate' | 'admin';
+	photo: string;
 	createdAt: Date;
 	updatedAt: Date;
 
 	// MEMBERS DATA
 	membership?: {
 		level: 'basic' | 'premium' | 'vip';
-		subscriptionExpiration: Date; 
+		subscriptionExpiration: Date;
 		status: boolean;
 		loyaltyPoints: number;
 		vacationVouchers?: Array<{
@@ -34,6 +35,12 @@ interface User extends Document {
 			paid: number;
 			pending: number;
 		};
+		status: 'pending' | 'approved' | 'rejected';
+		companyName?: string;
+		contactName?: string;
+		phone?: string;
+		address?: string;
+		affiliateType?: string;
 	};
 }
 
@@ -42,35 +49,36 @@ const UserSchema = new Schema<User>(
 		firstName: { type: String, required: true, trim: true },
 		lastName: { type: String, required: true, trim: true },
 		email: { type: String, required: true, unique: true, lowercase: true },
-		password: { type: String, required: true},
+		password: { type: String, required: true },
 		birthday: { type: String, required: true },
-		role: { 
-			type: String, 
-			enum: ['member', 'affiliate', 'admin'], 
-			default: 'member' 
+		role: {
+			type: String,
+			enum: ['member', 'affiliate', 'admin'],
+			default: 'member'
 		},
+		photo: { type: String },
 
 		// MEMBERS STRUCTURE
 		membership: {
-			level: { 
-				type: String, 
-				enum: ['basic', 'premium', 'vip'], 
-				default: 'basic' 
+			level: {
+				type: String,
+				enum: ['basic', 'premium', 'vip'],
+				default: 'basic'
 			},
-			subscriptionExpiration: { type: Date }, 
-			status: { 
-				type: Boolean, 
-				default: true 
+			subscriptionExpiration: { type: Date },
+			status: {
+				type: Boolean,
+				default: true
 			},
-			loyaltyPoints: { 
-				type: Number, 
-				default: 0 
+			loyaltyPoints: {
+				type: Number,
+				default: 0
 			},
 			vacationVouchers: [{
-				voucherId: { 
-					type: Schema.Types.ObjectId, 
+				voucherId: {
+					type: Schema.Types.ObjectId,
 					ref: 'Voucher',
-					required: true 
+					required: true
 				},
 				expirationDate: { type: Date },
 				isActive: { type: Boolean, default: true }
@@ -79,24 +87,34 @@ const UserSchema = new Schema<User>(
 
 		// AFFILIATE STRUCTURE
 		affiliate: {
-			referralCode: { 
-				type: String, 
-				unique: true, 
-				sparse: true 
+			referralCode: {
+				type: String,
+				unique: true,
+				sparse: true
 			},
-			referredBy: { 
-				type: Schema.Types.ObjectId, 
-				ref: 'User' 
+			referredBy: {
+				type: Schema.Types.ObjectId,
+				ref: 'User'
 			},
-			commissionRate: { 
-				type: Number, 
-				default: 0.1 
+			commissionRate: {
+				type: Number,
+				default: 0.1
 			},
 			earnings: {
 				total: { type: Number, default: 0 },
 				paid: { type: Number, default: 0 },
 				pending: { type: Number, default: 0 }
-			}
+			},
+			status: {
+				type: String,
+				enum: ['pending', 'approved', 'rejected'],
+				default: 'pending'
+			},
+			companyName: { type: String },
+			contactName: { type: String },
+			phone: { type: String },
+			address: { type: String },
+			affiliateType: { type: String }
 		}
 	},
 	{
