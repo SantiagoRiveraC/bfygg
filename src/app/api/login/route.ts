@@ -42,7 +42,7 @@ export async function POST(req: Request) {
 
         return NextResponse.json(
             {
-                message: 'session started',
+                message: 'session started...',
                 token,
                 user
             },
