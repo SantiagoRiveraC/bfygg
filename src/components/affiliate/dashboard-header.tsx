@@ -1,18 +1,15 @@
-import type { User } from "@/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Bell, HelpCircle, User2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useUsers } from "@/context/usersContext";
 
-interface DashboardHeaderProps {
-  user: User | null | undefined;
-  isLoading: boolean;
-}
 
-export default function DashboardHeader({
-  user,
-  isLoading,
-}: DashboardHeaderProps) {
+
+
+export default function DashboardHeader({ isLoading }: { isLoading: boolean }) {
+  const { loggedInUser } = useUsers()
+
   return (
     <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
       <div className="flex items-center gap-4">
@@ -29,7 +26,7 @@ export default function DashboardHeader({
 
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 overflow-hidden rounded-full bg-gradient-to-r from-violet-500 to-purple-600 flex justify-center items-center">
-            {!isLoading && user?.avatar && (
+            {!isLoading && loggedInUser?.photo && (
               <User2 className="h-6 w-6" />
             )}
           </div>
@@ -42,8 +39,8 @@ export default function DashboardHeader({
               </div>
             ) : (
               <>
-                <p className="font-medium text-sm text-gray-900">{user?.name}</p>
-                <p className="text-xs text-gray-600">Affiliate Partner</p>
+                <p className="font-medium text-sm text-gray-900 capitalize">{loggedInUser?.firstName}</p>
+                  <p className="text-xs text-gray-600 capitalize">{ loggedInUser?.role}</p>
               </>
             )}
           </div>
