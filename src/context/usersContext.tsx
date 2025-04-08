@@ -15,6 +15,7 @@ interface UserContextType {
 	handleEditUser: (id: string, data: object) => void;
 	handleGetAllUsers: () => void;
 	handleLogin: (data: LoginForm) => void
+	handleLogout: () => void;
 }
 
 const UsersContext = createContext<UserContextType>({
@@ -22,8 +23,9 @@ const UsersContext = createContext<UserContextType>({
 	loggedInUser: [],
 	handleDeleteUser: () => {},
 	handleEditUser: () => {},
-	handleGetAllUsers: () => { },
-	handleLogin: () => {}
+	handleGetAllUsers: () => {},
+	handleLogin: () => {},
+	handleLogout: () => {}
 });
 
 export function UsersProvider({ children }: { children: ReactNode }) {
@@ -55,6 +57,21 @@ export function UsersProvider({ children }: { children: ReactNode }) {
 				}
 			},{ style: { textTransform: 'capitalize'}}
 		)
+	}
+
+	const handleLogout = () => {
+		const token = localStorage.getItem('token')
+		toast.promise(
+			token,
+			{
+				
+			}
+		)
+		if (!token) {
+			return toast.error('error server')
+		}
+		toast.success('session closed')
+		return router.push('/')
 	}
 	
 	const hanldeAuthUser = async () => {
@@ -141,7 +158,7 @@ export function UsersProvider({ children }: { children: ReactNode }) {
 
 	return (
 		<UsersContext.Provider
-		value={{ users, loggedInUser, handleDeleteUser, handleGetAllUsers, handleEditUser, handleLogin }}
+		value={{ users, loggedInUser, handleDeleteUser, handleGetAllUsers, handleEditUser, handleLogin, handleLogout }}
 		>
 		{children}
 		</UsersContext.Provider>
