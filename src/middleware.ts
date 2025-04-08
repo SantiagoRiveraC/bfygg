@@ -27,7 +27,7 @@ export async function middleware(req: NextRequest) {
         return NextResponse.next({ request: { headers: requestHeaders}})
         
     } catch {
-        return new NextResponse("Acceso denegado: Token inválido", { status: 403 });
+        return new NextResponse("Access denied: Invalid token", { status: 403 });
     }
 }
 
@@ -36,5 +36,4 @@ export const config = {
         "/api/user/:path*",
         "/api/user/auth"
     ]
-    // matcher: ["/api/user/:path*", "!/api/user/create"],
 };

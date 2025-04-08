@@ -193,9 +193,7 @@ export default function Navbar() {
 								</Link>
 								<button
 									className="block w-full rounded-md px-3 py-2 text-left text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-violet-600"
-								//   onClick={() => {
-								//     logout();
-								//   }}
+								  	onClick={() => handleLogOut()}
 								>
 									Logout
 								</button>

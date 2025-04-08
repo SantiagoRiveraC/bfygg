@@ -8,6 +8,8 @@ import toast from "react-hot-toast";
 import { LoginForm } from "@/utils/interfaces";
 import { NextResponse } from "next/server";
 
+
+
 interface UserContextType {
 	users: User[];
 	loggedInUser: User | null
@@ -144,17 +146,33 @@ export function UsersProvider({ children }: { children: ReactNode }) {
 		)
 	}
 
-	const handleLogOut = () => {
+	const handleLogOut = async () => {
 		const token = localStorage.getItem('token')
+		const headers = { headers: { Authorization: `Bearer ${token}` } }
+		
 		if (!token) {
-			return toast.error('internal server error')
+			return toast.error('No authentication data found')
 		}
-		localStorage.removeItem('token')
-		toast.success('session closed successfully',{ style: { textTransform: 'capitalize'}})
-		setTimeout(() => {
-			setLoggedInUser(null)
-			router.push('/')
-		}, 1000);
+
+		const promise = axios.post('/api/user/logout',null, headers)
+		toast.promise(
+			promise,
+			{
+				loading: 'Signing out...',
+				success: (res: AxiosResponse) => {
+					localStorage.removeItem('token')
+					router.push('/')
+					setTimeout(() => {
+						setLoggedInUser(null)
+					}, 1000);
+					return <>{res.data.message}</>
+				},
+				error: (error: AxiosError<{ message?: string }>) => {
+					console.log(error)
+					return <>{ error.response?.data.message}</>
+				}
+			}
+		)
 	}
 	
 	const handleSignUp = async (data: FormData) => {
