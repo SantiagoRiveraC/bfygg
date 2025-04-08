@@ -16,6 +16,7 @@ export interface User {
 	password: string;
 	birthday: string;
 	role: 'member' | 'affiliate' | 'admin';
+	photo: string
 	createdAt: Date;
 	updatedAt: Date;
 
@@ -100,14 +101,26 @@ export interface UserEditFormData {
 	referralCode: string;
 }
 
-export type FormData = {
+export interface FormData {
+	// Datos básicos comunes
 	firstName: string;
 	lastName: string;
 	email: string;
 	password: string;
-	confirmPassword: string;
+	confirmPassword: string; // Solo para validación frontend
 	birthday: string;
-};
+
+	// Campo para determinar el tipo de registro (solo frontend)
+	userType: "member" | "affiliate";
+
+	// Datos específicos de afiliado (opcionales)
+	companyName?: string;
+	contactName?: string;
+	phone?: string;
+	address?: string;
+	affiliateType?: string;
+	document?: File; // Para subir archivos
+}
 
 export type FormErrors = {
 	name?: string;
