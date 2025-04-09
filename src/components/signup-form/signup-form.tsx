@@ -1,8 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 
-import type React from "react"
-
 import { useState, useEffect } from "react"
 import { motion, LayoutGroup } from "framer-motion"
 import { Eye, EyeOff, Check, X } from "lucide-react"
@@ -12,16 +10,15 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
-import type { FormData } from "@/utils/interfaces"
+import { User } from "@/utils/interfaces"
 
 type SignupFormProps = {
-	formData: FormData
-	setFormData: React.Dispatch<React.SetStateAction<FormData>>
+	formData: User
+	setFormData: React.Dispatch<React.SetStateAction<User>>
 	handleSubmit: (e: React.FormEvent) => void
 }
 
 export default function SignupForm({ formData, setFormData, handleSubmit }: SignupFormProps) {
-	// Validation state
 	const [errors, setErrors] = useState({
 		firstName: "",
 		lastName: "",
@@ -29,7 +26,6 @@ export default function SignupForm({ formData, setFormData, handleSubmit }: Sign
 		password: "",
 		confirmPassword: "",
 		birthday: "",
-		userType: "",
 		companyName: "",
 		contactName: "",
 		phone: "",
@@ -37,11 +33,9 @@ export default function SignupForm({ formData, setFormData, handleSubmit }: Sign
 		affiliateType: "",
 	})
 
-	// Password visibility state
 	const [showPassword, setShowPassword] = useState(false)
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
-	// Password strength indicators
 	const [passwordStrength, setPasswordStrength] = useState({
 		hasMinLength: false,
 		hasUpperCase: false,
@@ -49,32 +43,58 @@ export default function SignupForm({ formData, setFormData, handleSubmit }: Sign
 		hasNumber: false,
 	})
 
-	// Default form state initialization
-	useEffect(() => {
-		if (!formData.userType) {
-			setFormData((prev) => ({
-				...prev,
-				userType: "member",
-			}))
-		}
-	}, [])
-
-	// Handle input changes
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target
-		setFormData((prev) => ({
-			...prev,
-			[name]: value,
-		}))
+
+		if (name.startsWith('affiliate.')) {
+			const fieldName = name.split('.')[1]
+			setFormData(prev => {
+				const currentAffiliate = prev.affiliate || {
+					status: 'pending',
+					commissionRate: 0.1
+				}
+
+				return {
+					...prev,
+					affiliate: {
+						...currentAffiliate,
+						[fieldName]: value,
+						status: currentAffiliate.status
+					}
+				}
+			})
+		} else {
+			setFormData(prev => ({
+				...prev,
+				[name]: value
+			}))
+		}
 	}
 
-	// Validate email format
+	const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+		const { name, value } = e.target
+		setFormData(prev => {
+			const currentAffiliate = prev.affiliate || {
+				status: 'pending',
+				commissionRate: 0.1
+			}
+
+			return {
+				...prev,
+				affiliate: {
+					...currentAffiliate,
+					[name]: value,
+					status: currentAffiliate.status
+				}
+			}
+		})
+	}
+
 	const validateEmail = (email: string) => {
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 		return emailRegex.test(email)
 	}
 
-	// Check password strength
 	useEffect(() => {
 		const { password } = formData
 
@@ -84,34 +104,29 @@ export default function SignupForm({ formData, setFormData, handleSubmit }: Sign
 			hasLowerCase: /[a-z]/.test(password),
 			hasNumber: /[0-9]/.test(password),
 		})
-	}, [formData])
+	}, [formData.password])
 
-	// Validate form fields
 	useEffect(() => {
 		const newErrors = { ...errors }
 
-		// First name validation
 		if (formData.firstName.trim() && formData.firstName.length < 2) {
 			newErrors.firstName = "First name must be at least 2 characters"
 		} else {
 			newErrors.firstName = ""
 		}
 
-		// Last name validation
 		if (formData.lastName.trim() && formData.lastName.length < 2) {
 			newErrors.lastName = "Last name must be at least 2 characters"
 		} else {
 			newErrors.lastName = ""
 		}
 
-		// Email validation
 		if (formData.email.trim() && !validateEmail(formData.email)) {
 			newErrors.email = "Please enter a valid email address"
 		} else {
 			newErrors.email = ""
 		}
 
-		// Password validation
 		if (formData.password.trim()) {
 			const strengthScore = Object.values(passwordStrength).filter(Boolean).length
 			if (strengthScore < 2) {
@@ -123,14 +138,12 @@ export default function SignupForm({ formData, setFormData, handleSubmit }: Sign
 			newErrors.password = ""
 		}
 
-		// Confirm password validation
-		if (formData.confirmPassword.trim() && formData.password !== formData.confirmPassword) {
+		if (formData.confirmPassword?.trim() && formData.password !== formData.confirmPassword) {
 			newErrors.confirmPassword = "Passwords do not match"
 		} else {
 			newErrors.confirmPassword = ""
 		}
 
-		// Birthday validation
 		if (formData.birthday) {
 			const birthDate = new Date(formData.birthday)
 			const today = new Date()
@@ -145,33 +158,32 @@ export default function SignupForm({ formData, setFormData, handleSubmit }: Sign
 			newErrors.birthday = ""
 		}
 
-		// Affiliate fields validation
-		if (formData.userType === "affiliate") {
-			if (formData?.companyName?.trim() && formData.companyName.length < 2) {
+		if (formData.role === "affiliate") {
+			if (formData.affiliate?.companyName?.trim() && formData.affiliate.companyName.length < 2) {
 				newErrors.companyName = "Company name must be at least 2 characters"
 			} else {
 				newErrors.companyName = ""
 			}
 
-			if (formData?.contactName?.trim() && formData.contactName.length < 2) {
+			if (formData.affiliate?.contactName?.trim() && formData.affiliate.contactName.length < 2) {
 				newErrors.contactName = "Contact name must be at least 2 characters"
 			} else {
 				newErrors.contactName = ""
 			}
 
-			if (formData?.phone?.trim() && !/^\+?[0-9\s\-()]{8,}$/.test(formData.phone)) {
+			if (formData.affiliate?.phone?.trim() && !/^\+?[0-9\s\-()]{8,}$/.test(formData.affiliate.phone)) {
 				newErrors.phone = "Please enter a valid phone number"
 			} else {
 				newErrors.phone = ""
 			}
 
-			if (formData?.address?.trim() && formData.address.length < 5) {
+			if (formData.affiliate?.address?.trim() && formData.affiliate.address.length < 5) {
 				newErrors.address = "Address must be at least 5 characters"
 			} else {
 				newErrors.address = ""
 			}
 
-			if (!formData.affiliateType) {
+			if (!formData.affiliate?.affiliateType) {
 				newErrors.affiliateType = "Please select an affiliate type"
 			} else {
 				newErrors.affiliateType = ""
@@ -181,7 +193,6 @@ export default function SignupForm({ formData, setFormData, handleSubmit }: Sign
 		setErrors(newErrors)
 	}, [formData, passwordStrength])
 
-	// Calculate password strength percentage and color
 	const getPasswordStrength = () => {
 		if (!formData.password) return { percent: 0, color: "" }
 
@@ -201,7 +212,7 @@ export default function SignupForm({ formData, setFormData, handleSubmit }: Sign
 	const containerVariants = {
 		member: {
 			width: "100%",
-			maxWidth: "28rem", // max-w-md equivalent
+			maxWidth: "28rem",
 			transition: {
 				type: "spring",
 				stiffness: 200,
@@ -211,7 +222,7 @@ export default function SignupForm({ formData, setFormData, handleSubmit }: Sign
 		},
 		affiliate: {
 			width: "100%",
-			maxWidth: "64rem", // max-w-5xl equivalent
+			maxWidth: "64rem",
 			transition: {
 				type: "spring",
 				stiffness: 200,
@@ -244,14 +255,6 @@ export default function SignupForm({ formData, setFormData, handleSubmit }: Sign
 		},
 	}
 
-	// Layout transition that prevents text scaling
-	// const layoutTransition = {
-	// 	type: "spring",
-	// 	stiffness: 200,
-	// 	damping: 25,
-	// 	duration: 0.8,
-	// }
-
 	return (
 		<div className="h-screen flex items-center justify-center bg-gray-50 px-4">
 			<LayoutGroup>
@@ -259,29 +262,26 @@ export default function SignupForm({ formData, setFormData, handleSubmit }: Sign
 					className="w-full mx-auto"
 					variants={containerVariants}
 					initial="member"
-					animate={formData.userType === "affiliate" ? "affiliate" : "member"}
+					animate={formData.role === "affiliate" ? "affiliate" : "member"}
 				>
 					<motion.div
 						initial={{ opacity: 0, y: 20 }}
 						animate={{ opacity: 1, y: 0 }}
 						transition={{ duration: 0.8 }}
 						layout="position"
-						// layoutTransition={layoutTransition}
 					>
 						<Card className="border-violet-200 shadow-lg">
 							<CardHeader className="bg-gradient-to-r from-violet-500 to-purple-600 py-3 text-white">
 								<CardTitle className="text-center text-xl">Create Account</CardTitle>
-								<CardDescription className="text-center text-violet-100">Sign up to get started</CardDescription>
+								<CardDescription className="text-center text-violet-100">
+									Sign up to get started
+								</CardDescription>
 							</CardHeader>
 							<CardContent className="p-4">
 								<form onSubmit={handleSubmit}>
 									{/* User Type Selection */}
-									<motion.div
-										className="space-y-1 mb-3"
-										layout="position"
-										// layoutTransition={layoutTransition}
-									>
-										<Label htmlFor="userType" className="text-sm font-medium">
+									<motion.div className="space-y-1 mb-3" layout="position">
+										<Label htmlFor="role" className="text-sm font-medium">
 											Register as
 										</Label>
 										<div className="flex space-x-4">
@@ -289,10 +289,10 @@ export default function SignupForm({ formData, setFormData, handleSubmit }: Sign
 												<input
 													type="radio"
 													id="member"
-													name="userType"
+													name="role"
 													value="member"
-													checked={formData.userType === "member"}
-													onChange={() => setFormData((prev) => ({ ...prev, userType: "member" }))}
+													checked={formData.role === "member"}
+													onChange={() => setFormData(prev => ({ ...prev, role: "member" }))}
 													className="h-4 w-4 text-violet-600 focus:ring-violet-500"
 												/>
 												<Label htmlFor="member" className="ml-2 text-sm">
@@ -303,10 +303,10 @@ export default function SignupForm({ formData, setFormData, handleSubmit }: Sign
 												<input
 													type="radio"
 													id="affiliate"
-													name="userType"
+													name="role"
 													value="affiliate"
-													checked={formData.userType === "affiliate"}
-													onChange={() => setFormData((prev) => ({ ...prev, userType: "affiliate" }))}
+													checked={formData.role === "affiliate"}
+													onChange={() => setFormData(prev => ({ ...prev, role: "affiliate" }))}
 													className="h-4 w-4 text-violet-600 focus:ring-violet-500"
 												/>
 												<Label htmlFor="affiliate" className="ml-2 text-sm">
@@ -320,17 +320,12 @@ export default function SignupForm({ formData, setFormData, handleSubmit }: Sign
 									<motion.div
 										className="grid gap-6"
 										style={{
-											gridTemplateColumns: formData.userType === "affiliate" ? "repeat(2, 1fr)" : "1fr",
+											gridTemplateColumns: formData.role === "affiliate" ? "repeat(2, 1fr)" : "1fr",
 										}}
 										layout="position"
-										// layoutTransition={layoutTransition}
 									>
 										{/* Left column - Basic Information */}
-										<motion.div 
-											className="space-y-2" 
-											layout="position" 
-											// layoutTransition={layoutTransition}
-										>
+										<motion.div className="space-y-2" layout="position">
 											<h3 className="text-sm font-medium text-gray-700">Personal Information</h3>
 
 											{/* First Name Field */}
@@ -425,12 +420,10 @@ export default function SignupForm({ formData, setFormData, handleSubmit }: Sign
 												{/* Password strength indicators */}
 												{formData.password && (
 													<div className="mt-1 space-y-1">
-														{/* Password strength progress bar */}
 														<div className="w-full h-1 bg-gray-200 rounded-full overflow-hidden">
 															<div
 																className={`h-full ${getPasswordStrength().color} transition-all duration-300 ease-in-out`}
 																style={{ width: `${getPasswordStrength().percent}%` }}
-																aria-label={`Password strength: ${getPasswordStrength().percent}%`}
 															/>
 														</div>
 
@@ -487,7 +480,7 @@ export default function SignupForm({ formData, setFormData, handleSubmit }: Sign
 															"border-violet-200 pr-10 focus-visible:ring-violet-500 h-8 text-sm",
 															errors.confirmPassword && "border-red-300 focus-visible:ring-red-500",
 														)}
-														value={formData.confirmPassword}
+														value={formData.confirmPassword || ''}
 														onChange={handleChange}
 													/>
 													<button
@@ -528,7 +521,7 @@ export default function SignupForm({ formData, setFormData, handleSubmit }: Sign
 										</motion.div>
 
 										{/* Right column - Affiliate Information */}
-										{formData.userType === "affiliate" && (
+										{formData.role === "affiliate" && (
 											<motion.div
 												className="space-y-2"
 												variants={affiliateColumnVariants}
@@ -537,25 +530,24 @@ export default function SignupForm({ formData, setFormData, handleSubmit }: Sign
 												exit="hidden"
 												key="affiliate-column"
 												layout="position"
-												// layoutTransition={layoutTransition}
 											>
 												<h3 className="text-sm font-medium text-gray-700">Affiliate Information</h3>
 
 												{/* Company Name Field */}
 												<div className="space-y-1">
-													<Label htmlFor="companyName" className="text-xs font-medium">
+													<Label htmlFor="affiliate.companyName" className="text-xs font-medium">
 														Company/Entity Name
 													</Label>
 													<Input
-														id="companyName"
-														name="companyName"
+														id="affiliate.companyName"
+														name="affiliate.companyName"
 														type="text"
 														placeholder="Company Name"
 														className={cn(
 															"border-violet-200 focus-visible:ring-violet-500 h-8 text-sm",
 															errors.companyName && "border-red-300 focus-visible:ring-red-500",
 														)}
-														value={formData.companyName}
+														value={formData.affiliate?.companyName || ''}
 														onChange={handleChange}
 													/>
 													{errors.companyName && <p className="text-xs text-red-500">{errors.companyName}</p>}
@@ -563,19 +555,19 @@ export default function SignupForm({ formData, setFormData, handleSubmit }: Sign
 
 												{/* Contact Name Field */}
 												<div className="space-y-1">
-													<Label htmlFor="contactName" className="text-xs font-medium">
+													<Label htmlFor="affiliate.contactName" className="text-xs font-medium">
 														Primary Contact Name
 													</Label>
 													<Input
-														id="contactName"
-														name="contactName"
+														id="affiliate.contactName"
+														name="affiliate.contactName"
 														type="text"
 														placeholder="Contact Name"
 														className={cn(
 															"border-violet-200 focus-visible:ring-violet-500 h-8 text-sm",
 															errors.contactName && "border-red-300 focus-visible:ring-red-500",
 														)}
-														value={formData.contactName}
+														value={formData.affiliate?.contactName || ''}
 														onChange={handleChange}
 													/>
 													{errors.contactName && <p className="text-xs text-red-500">{errors.contactName}</p>}
@@ -583,19 +575,19 @@ export default function SignupForm({ formData, setFormData, handleSubmit }: Sign
 
 												{/* Phone Field */}
 												<div className="space-y-1">
-													<Label htmlFor="phone" className="text-xs font-medium">
+													<Label htmlFor="affiliate.phone" className="text-xs font-medium">
 														Phone Number
 													</Label>
 													<Input
-														id="phone"
-														name="phone"
+														id="affiliate.phone"
+														name="affiliate.phone"
 														type="tel"
 														placeholder="Phone Number"
 														className={cn(
 															"border-violet-200 focus-visible:ring-violet-500 h-8 text-sm",
 															errors.phone && "border-red-300 focus-visible:ring-red-500",
 														)}
-														value={formData.phone}
+														value={formData.affiliate?.phone || ''}
 														onChange={handleChange}
 													/>
 													{errors.phone && <p className="text-xs text-red-500">{errors.phone}</p>}
@@ -603,19 +595,19 @@ export default function SignupForm({ formData, setFormData, handleSubmit }: Sign
 
 												{/* Address Field */}
 												<div className="space-y-1">
-													<Label htmlFor="address" className="text-xs font-medium">
+													<Label htmlFor="affiliate.address" className="text-xs font-medium">
 														Address
 													</Label>
 													<Input
-														id="address"
-														name="address"
+														id="affiliate.address"
+														name="affiliate.address"
 														type="text"
 														placeholder="Address"
 														className={cn(
 															"border-violet-200 focus-visible:ring-violet-500 h-8 text-sm",
 															errors.address && "border-red-300 focus-visible:ring-red-500",
 														)}
-														value={formData.address}
+														value={formData.affiliate?.address || ''}
 														onChange={handleChange}
 													/>
 													{errors.address && <p className="text-xs text-red-500">{errors.address}</p>}
@@ -633,8 +625,8 @@ export default function SignupForm({ formData, setFormData, handleSubmit }: Sign
 															"w-full rounded-md border border-violet-200 bg-white px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 h-8",
 															errors.affiliateType && "border-red-300 focus:ring-red-500",
 														)}
-														value={formData.affiliateType}
-														onChange={(e) => setFormData((prev) => ({ ...prev, affiliateType: e.target.value }))}
+														value={formData.affiliate?.affiliateType || ''}
+														onChange={handleSelectChange}
 													>
 														<option value="">Select affiliate type</option>
 														<option value="hotel">Hotel</option>
@@ -664,11 +656,7 @@ export default function SignupForm({ formData, setFormData, handleSubmit }: Sign
 									</motion.div>
 
 									{/* Submit Button */}
-									<motion.div 
-										className="mt-4" 
-										layout="position" 
-										// layoutTransition={layoutTransition}
-									>
+									<motion.div className="mt-4" layout="position">
 										<Button
 											type="submit"
 											className={cn(
@@ -683,11 +671,7 @@ export default function SignupForm({ formData, setFormData, handleSubmit }: Sign
 									</motion.div>
 
 									{/* Login Link */}
-									<motion.div
-										className="mt-2 text-center text-xs"
-										layout="position"
-										// layoutTransition={layoutTransition}
-									>
+									<motion.div className="mt-2 text-center text-xs" layout="position">
 										Already have an account?{" "}
 										<Link href="/login" className="text-violet-600 hover:text-violet-700 font-medium">
 											Log in
@@ -702,4 +686,3 @@ export default function SignupForm({ formData, setFormData, handleSubmit }: Sign
 		</div>
 	)
 }
-

@@ -18,7 +18,7 @@ interface UserContextType {
 	handleGetAllUsers: () => void;
 	handleLogin: (data: LoginForm) => void
 	handleLogOut: () => void
-	handleSignUp: (data: FormData) => void
+	handleSignUp: (data: User) => void
 }
 
 const UsersContext = createContext<UserContextType>({
@@ -175,7 +175,7 @@ export function UsersProvider({ children }: { children: ReactNode }) {
 		)
 	}
 	
-	const handleSignUp = async (data: FormData) => {
+	const handleSignUp = async (data: User) => {
 		const promise = axios.post('/api/user/create', data)
 		toast.promise(
 			promise,

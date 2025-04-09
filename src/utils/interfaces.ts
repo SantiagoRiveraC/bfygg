@@ -7,18 +7,20 @@ export interface MongooseConnection {
 }
 
 
+
 export interface User {
 	// BASIC DATA
-	_id: string;
+	_id?: string; 
 	firstName: string;
 	lastName: string;
 	email: string;
 	password: string;
+	confirmPassword?: string; 
 	birthday: string;
 	role: 'member' | 'affiliate' | 'admin';
-	photo: string
-	createdAt: Date;
-	updatedAt: Date;
+	photo?: string;
+	createdAt?: Date; 
+	updatedAt?: Date; 
 
 	// MEMBER DATA
 	membership?: {
@@ -35,17 +37,23 @@ export interface User {
 
 	// AFFILIATE DATA
 	affiliate?: {
-		referralCode: string;
+		referralCode?: string; 
 		referredBy?: Types.ObjectId;
-		commissionRate: number;
+		commissionRate?: number; 
 		earnings?: {
 			total: number;
 			paid: number;
 			pending: number;
 		};
+		status: 'pending' | 'approved' | 'rejected';
+		companyName?: string;
+		contactName?: string;
+		phone?: string;	
+		address?: string;
+		affiliateType?: string;
+		document?: File
 	};
 }
-
 
 export interface LoginForm {
 	email: string
