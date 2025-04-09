@@ -1,4 +1,4 @@
-import Suscription from "@/models/Suscription";
+import SubscriptionModel from "@/models/Subscription";
 import dbConnect from "@/lib/db";
 import { NextResponse } from "next/server";
 import { RouteContext } from "@/utils/interfaces";
@@ -13,16 +13,16 @@ export async function DELETE(req: Request, context: RouteContext) {
       return NextResponse.json({ mesaage: "ID is required" }, { status: 400 });
     }
 
-    const deleteSuscription = await Suscription.findByIdAndDelete(id);
-    if (!deleteSuscription) {
+    const deleteSubscription = await SubscriptionModel.findByIdAndDelete(id);
+    if (!deleteSubscription) {
       return NextResponse.json(
-        { mesaage: "Suscription not found" },
+        { mesaage: "Subscription not found" },
         { status: 400 }
       );
     }
 
     return NextResponse.json(
-      { mesaage: "Suscription deleted successfully" },
+      { mesaage: "Subscription deleted successfully" },
       { status: 200 }
     );
   } catch (error) {
@@ -44,19 +44,19 @@ export async function PUT(req: Request, context: RouteContext) {
     }
 
     const body = await req.json();
-    const suscription = await Suscription.findById(id);
-    if (!suscription) {
+    const subscription = await SubscriptionModel.findById(id);
+    if (!subscription) {
       return NextResponse.json(
-        { message: "Suscription not found" },
+        { message: "Subscription not found" },
         { status: 404 }
       );
     }
 
-    Object.assign(suscription, body);
+    Object.assign(subscription, body);
 
-    await suscription?.save();
+    await subscription?.save();
     return NextResponse.json(
-      { messaje: "Suscription update successfully", suscription },
+      { messaje: "Subscription update successfully", subscription },
       { status: 200 }
     );
   } catch (error) {
@@ -76,16 +76,16 @@ export async function GET(req: Request, context: RouteContext) {
     if (!id) {
       return NextResponse.json({ mesaage: "ID is required" }, { status: 400 });
     }
-    const suscription = await Suscription.findById(id);
-    if (!suscription) {
+    const subscription = await SubscriptionModel.findById(id);
+    if (!subscription) {
       return NextResponse.json(
-        { message: "Suscription not found" },
+        { message: "Subscription not found" },
         { status: 404 }
       );
     }
 
     return NextResponse.json(
-      { messaje: "Suscription get successfully", suscription },
+      { messaje: "Subscription get successfully", subscription },
       { status: 200 }
     );
   } catch (error) {
