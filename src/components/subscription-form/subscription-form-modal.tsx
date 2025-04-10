@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, useFieldArray, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -45,6 +45,7 @@ import toast, { Toaster } from "react-hot-toast";
 
 // Define the schema for each subscription type (mantenido igual...)
 const baseSchema = z.object({
+  _id: z.string().optional(),
   name: z.string().min(3, { message: "Name must be at least 3 characters" }),
   description: z
     .string()
@@ -114,37 +115,38 @@ interface SubscriptionFormModalProps {
     | "ghost"
     | "link"
     | "destructive";
+  initialData?: FormValues | null;
+  isEdit?: boolean;
+  onClose?: () => void;
+  open: boolean;
+  setOpen: (open: boolean) => void;
 }
 
 export default function SubscriptionFormModal({
-  onSubscriptionCreated,
-  buttonLabel = "Create Subscription",
-  buttonVariant = "default",
-}: SubscriptionFormModalProps) {
-  const [open, setOpen] = useState(false);
-  const [subscriptionType, setSubscriptionType] = useState<
-    "simple" | "variable" | "bundled" | null
-  >(null);
-
-  // Initialize form with default values
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      description: "",
-    },
-    mode: "onChange",
-  });
-
-  // Get methods from react-hook-form
-  const {
-    control,
-    handleSubmit,
-    watch,
-    setValue,
-    reset,
-    formState: {},
-  } = form;
+    onSubscriptionCreated,
+    buttonLabel = "Create Subscription",
+    buttonVariant = "default",
+    initialData = null,
+    isEdit = false,
+    onClose,
+    open,
+    setOpen
+  }: SubscriptionFormModalProps) {
+    const [subscriptionType, setSubscriptionType] = useState<
+      "simple" | "variable" | "bundled" | null
+    >(null);
+  
+    // Initialize form
+    const form = useForm<FormValues>({
+      resolver: zodResolver(formSchema),
+      defaultValues: {
+        name: "",
+        description: "",
+      },
+      mode: "onChange",
+    });
+  
+    const { control, handleSubmit, watch, setValue, reset, formState: {} } = form;
 
   // Field arrays for dynamic fields
   const simpleBenefits = useFieldArray({
@@ -206,43 +208,66 @@ export default function SubscriptionFormModal({
 
   // Handle form submission
   const onSubmit = (data: FormValues) => {
-    const promise = axios.post("/api/subscription/create", data)
-    toast.promise(
-        promise,
-        {
-            loading: "Creating subscription...",
-            success: (res: AxiosResponse) => {    
-                if (onSubscriptionCreated) {
-                    onSubscriptionCreated(data);
-                  }
-            
-                  setOpen(false);
-                  resetForm();
-                return <>{res.data.message}</>;
-            }
-            ,
-            error: (error: AxiosError<{message?: string}>) => {     
-                console.error(error);
-                return <>{error?.response?.data.message}</>;
-            }
+    const promise = isEdit
+      ? axios.put(`/api/subscription/${initialData?._id}`, data)
+      : axios.post("/api/subscription/create", data);
+
+    toast.promise(promise, {
+      loading: isEdit ? "Updating subscription..." : "Creating subscription...",
+      success: (res: AxiosResponse) => {
+        if (onSubscriptionCreated) {
+          onSubscriptionCreated(data);
         }
-    )
-  };
-  
-  // Reset the form when the modal is closed
-  const resetForm = () => {
-    reset();
-    setSubscriptionType(null);
+        setOpen(false);
+        resetForm();
+        return <>{res.data.message}</>;
+      },
+      error: (error: AxiosError<{ message?: string }>) => {
+        console.error(error);
+        return <>{error?.response?.data.message || "An error occurred"}</>;
+      },
+    });
   };
 
+  useEffect(() => {
+    if (open) {
+      if (isEdit && initialData) {
+        // Modo edición - cargar datos existentes
+        reset(initialData);
+        setSubscriptionType(initialData.type);
+      } else {
+        // Modo creación - resetear a valores iniciales
+        reset({
+          name: "",
+          description: "",
+        });
+        setSubscriptionType(null);
+      }
+    }
+  }, [open, isEdit, initialData, reset]);
+
+  // Función para resetear completamente
+  const resetForm = () => {
+    reset({
+      name: "",
+      description: "",
+    });
+    setSubscriptionType(null);
+    setOpen(false)
+  };
+
+  // Manejar cierre del modal
+  const handleOpenChange = (isOpen: boolean) => {
+    setOpen(isOpen);
+    if (!isOpen) {
+      resetForm();
+      if (onClose) onClose();
+    }
+  };
+
+
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(isOpen) => {
-        setOpen(isOpen);
-        if (!isOpen) resetForm();
-      }}
-    >
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button variant={buttonVariant} className="bg-purple-600">
           <Plus className="mr-2 h-4 w-4" />
@@ -267,7 +292,9 @@ export default function SubscriptionFormModal({
               >
                 {/* Subscription Type Selection */}
                 <div className="space-y-2">
-                  <FormLabel className="text-primary">Subscription Type</FormLabel>
+                  <FormLabel className="text-primary">
+                    Subscription Type
+                  </FormLabel>
                   <Select
                     value={subscriptionType || undefined}
                     onValueChange={(value) =>
@@ -318,7 +345,9 @@ export default function SubscriptionFormModal({
                           name="description"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-primary">Description</FormLabel>
+                              <FormLabel className="text-primary">
+                                Description
+                              </FormLabel>
                               <FormControl>
                                 <Textarea
                                   placeholder="Describe the subscription and its benefits"
@@ -342,7 +371,9 @@ export default function SubscriptionFormModal({
                             name="price"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel className="text-primary">Price</FormLabel>
+                                <FormLabel className="text-primary">
+                                  Price
+                                </FormLabel>
                                 <FormControl>
                                   <Input
                                     className="text-muted-foreground"
@@ -362,7 +393,9 @@ export default function SubscriptionFormModal({
                             name="currency"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel className="text-primary">Currency</FormLabel>
+                                <FormLabel className="text-primary">
+                                  Currency
+                                </FormLabel>
                                 <Select
                                   value={field.value}
                                   onValueChange={field.onChange}
@@ -388,7 +421,9 @@ export default function SubscriptionFormModal({
                             name="billingCycle"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel className="text-primary">Billing Cycle</FormLabel>
+                                <FormLabel className="text-primary">
+                                  Billing Cycle
+                                </FormLabel>
                                 <Select
                                   value={field.value}
                                   onValueChange={field.onChange}
@@ -418,7 +453,9 @@ export default function SubscriptionFormModal({
                         </div>
 
                         <div>
-                          <FormLabel className="text-primary">Benefits</FormLabel>
+                          <FormLabel className="text-primary">
+                            Benefits
+                          </FormLabel>
                           <FormDescription className="mb-3">
                             Add the benefits included in this subscription.
                           </FormDescription>
@@ -436,7 +473,7 @@ export default function SubscriptionFormModal({
                                     <FormItem className="flex-1">
                                       <FormControl>
                                         <Input
-                                            className="text-muted-foreground"
+                                          className="text-muted-foreground"
                                           placeholder="e.g., Unlimited access"
                                           {...field}
                                         />
@@ -476,7 +513,9 @@ export default function SubscriptionFormModal({
                     {subscriptionType === "variable" && (
                       <div className="space-y-6">
                         <div>
-                          <FormLabel className="text-primary">Options</FormLabel>
+                          <FormLabel className="text-primary">
+                            Options
+                          </FormLabel>
                           <FormDescription className="mb-3">
                             Add different options for this variable
                             subscription.
@@ -526,10 +565,12 @@ export default function SubscriptionFormModal({
                                           name={`options.${optionIndex}.name`}
                                           render={({ field }) => (
                                             <FormItem>
-                                              <FormLabel className="text-primary">Option Name</FormLabel>
+                                              <FormLabel className="text-primary">
+                                                Option Name
+                                              </FormLabel>
                                               <FormControl>
                                                 <Input
-                                                    className="text-muted-foreground"
+                                                  className="text-muted-foreground"
                                                   placeholder="e.g., Basic, Premium"
                                                   {...field}
                                                 />
@@ -545,7 +586,9 @@ export default function SubscriptionFormModal({
                                             name={`options.${optionIndex}.price`}
                                             render={({ field }) => (
                                               <FormItem>
-                                                <FormLabel className="text-primary">Price</FormLabel>
+                                                <FormLabel className="text-primary">
+                                                  Price
+                                                </FormLabel>
                                                 <FormControl>
                                                   <Input
                                                     className="text-muted-foreground"
@@ -565,7 +608,9 @@ export default function SubscriptionFormModal({
                                             name={`options.${optionIndex}.currency`}
                                             render={({ field }) => (
                                               <FormItem>
-                                                <FormLabel className="text-primary">Currency</FormLabel>
+                                                <FormLabel className="text-primary">
+                                                  Currency
+                                                </FormLabel>
                                                 <Select
                                                   value={field.value}
                                                   onValueChange={field.onChange}
@@ -631,7 +676,9 @@ export default function SubscriptionFormModal({
                                         </div>
 
                                         <div>
-                                          <FormLabel className="text-primary">Benefits</FormLabel>
+                                          <FormLabel className="text-primary">
+                                            Benefits
+                                          </FormLabel>
                                           <FormDescription className="mb-3">
                                             Add the benefits included in this
                                             option.
@@ -732,7 +779,9 @@ export default function SubscriptionFormModal({
                     {subscriptionType === "bundled" && (
                       <div className="space-y-6">
                         <div>
-                          <FormLabel className="text-primary">Bundled Items</FormLabel>
+                          <FormLabel className="text-primary">
+                            Bundled Items
+                          </FormLabel>
                           <FormDescription className="mb-3">
                             Add the items included in this bundle.
                           </FormDescription>
@@ -750,7 +799,7 @@ export default function SubscriptionFormModal({
                                     <FormItem className="flex-1">
                                       <FormControl>
                                         <Input
-                                            className="text-muted-foreground"
+                                          className="text-muted-foreground"
                                           placeholder="Item ID (e.g., prod_123)"
                                           {...field}
                                         />
@@ -793,12 +842,20 @@ export default function SubscriptionFormModal({
         </ScrollArea>
 
         <DialogFooter>
-          <Button variant="outline" className="text-primary hover:text-primary/60" onClick={() => setOpen(false)}>
+          <Button
+            variant="outline"
+            className="text-primary hover:text-primary/60"
+            onClick={() => handleOpenChange(false)}
+          >
             Cancel
           </Button>
           {subscriptionType && (
-            <Button type="submit" className="bg-purple-600 hover:bg-purple-600/60" form="subscription-form">
-              Create Subscription
+            <Button
+              type="submit"
+              className="bg-purple-600 hover:bg-purple-600/60"
+              form="subscription-form"
+            >
+              {isEdit ? "Edit Subscription" : buttonLabel}
             </Button>
           )}
         </DialogFooter>

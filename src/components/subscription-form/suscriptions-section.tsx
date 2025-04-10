@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import SubscriptionFormModal from "@/components/subscription-form/subscription-form-modal";
+import SubscriptionFormModal, {
+  FormValues,
+} from "@/components/subscription-form/subscription-form-modal";
 import {
   Card,
   CardContent,
@@ -12,39 +14,47 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 import axios from "axios";
 
-// Define the subscription type based on the form schema
-export interface ISubscription {
-  type: "simple" | "variable" | "bundled";
-  name: string;
-  description: string;
-  price?: number;
-  currency?: "USD" | "COP" | "EUR";
-  billingCycle?: "Daily" | "Weekly" | "Monthly" | "Yearly";
-  benefits?: { text: string }[];
-  options?: {
-    name: string;
-    price: number;
-    currency: "USD" | "COP" | "EUR";
-    billingCycle: "Daily" | "Weekly" | "Monthly" | "Yearly";
-    benefits: { text: string }[];
-  }[];
-  bundledItems?: { itemId: string }[];
-}
-
 export default function SubscriptionSection() {
-  const [subscriptions, setSubscriptions] = useState<ISubscription[]>([]);
+  const [subscriptions, setSubscriptions] = useState<FormValues[]>([]);
+  const [open, setOpen] = useState(false);
+  const [editingSubscription, setEditingSubscription] =
+    useState<FormValues | null>(null);
 
-  const handleDeleteSubscription = (index: number) => {
-    const newSubscriptions = [...subscriptions];
-    newSubscriptions.splice(index, 1);
-    setSubscriptions(newSubscriptions);
+  const handleDeleteSubscription = (
+    subscription: FormValues,
+    index: number
+  ) => {
+    axios
+      .delete(`/api/subscription/${subscription._id}`)
+      .then(() => {
+        const newSubscriptions = [...subscriptions];
+        newSubscriptions.splice(index, 1);
+        setSubscriptions(newSubscriptions);
+      })
+      .catch((error) => console.error(error));
   };
 
-  const handleSubscriptionCreated = (subscription: ISubscription) => {
-    setSubscriptions([...subscriptions, subscription]);
+  const handleEditSubscription = (subscription: FormValues) => {
+    setEditingSubscription(subscription);
+    setOpen(true);
+  };
+
+  const handleSubscriptionCreated = (subscription: FormValues) => {
+    if (editingSubscription) {
+      // Actualizar suscripción existente
+      setSubscriptions(
+        subscriptions.map((sub) =>
+          sub._id === subscription._id ? subscription : sub
+        )
+      );
+      setEditingSubscription(null);
+    } else {
+      // Añadir nueva suscripción
+      setSubscriptions([...subscriptions, subscription]);
+    }
   };
 
   const formatCurrency = (amount: number, currency: string) => {
@@ -73,12 +83,14 @@ export default function SubscriptionSection() {
         <h1 className="text-3xl font-bold text-black">
           Subscription Management
         </h1>
-        {subscriptions.length > 0 && (
-          <SubscriptionFormModal
-            onSubscriptionCreated={handleSubscriptionCreated}
-            buttonLabel="Create New Subscription"
-          />
-        )}
+        <SubscriptionFormModal
+          onSubscriptionCreated={handleSubscriptionCreated}
+          initialData={editingSubscription}
+          isEdit={!!editingSubscription}
+          onClose={() => setEditingSubscription(null)}
+          open={open}
+          setOpen={setOpen}
+        />
       </div>
 
       {subscriptions.length === 0 ? (
@@ -89,7 +101,11 @@ export default function SubscriptionSection() {
           <p className="text-purple-500 font-semibold mb-6">
             Create your first subscription to get started
           </p>
-          <SubscriptionFormModal buttonVariant="outline" />
+          <SubscriptionFormModal
+            buttonVariant="outline"
+            open={open}
+            setOpen={setOpen}
+          />
         </div>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -112,14 +128,26 @@ export default function SubscriptionSection() {
                     </Badge>
                     <CardTitle>{subscription.name}</CardTitle>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleDeleteSubscription(index)}
-                    className="h-8 w-8"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                  <div className="flex gap-1">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleEditSubscription(subscription)}
+                      className="h-8 w-8"
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() =>
+                        handleDeleteSubscription(subscription, index)
+                      }
+                      className="h-8 w-8"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
                 <CardDescription className="line-clamp-2">
                   {subscription.description}
@@ -129,7 +157,9 @@ export default function SubscriptionSection() {
                 {subscription.type === "simple" && (
                   <div className="space-y-3">
                     <div className="flex justify-between">
-                      <span className="text-sm text-purple-500 font-semibold">Price:</span>
+                      <span className="text-sm text-purple-500 font-semibold">
+                        Price:
+                      </span>
                       <span className="font-medium">
                         {formatCurrency(
                           subscription.price || 0,
@@ -138,7 +168,9 @@ export default function SubscriptionSection() {
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-sm text-purple-500 font-semibold">Billing:</span>
+                      <span className="text-sm text-purple-500 font-semibold">
+                        Billing:
+                      </span>
                       <span>{subscription.billingCycle}</span>
                     </div>
                     {subscription.benefits &&
