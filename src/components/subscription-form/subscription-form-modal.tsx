@@ -121,29 +121,36 @@ interface SubscriptionFormModalProps {
 }
 
 export default function SubscriptionFormModal({
-    onSubscriptionCreated,
-    buttonLabel = "Create Subscription",
-    buttonVariant = "default",
-    initialData = null,
-    isEdit = false,
-    onClose,
-    open,
-    setOpen
-  }: SubscriptionFormModalProps) {
-    const [subscriptionType, setSubscriptionType] = useState<
-      "simple" | "variable" | "bundled" | null
-    >(null);
-  
-    const form = useForm<FormValues>({
-      resolver: zodResolver(formSchema),
-      defaultValues: {
-        name: "",
-        description: "",
-      },
-      mode: "onChange",
-    });
-  
-    const { control, handleSubmit, watch, setValue, reset, formState: {} } = form;
+  onSubscriptionCreated,
+  buttonLabel = "Create Subscription",
+  buttonVariant = "default",
+  initialData = null,
+  isEdit = false,
+  onClose,
+  open,
+  setOpen,
+}: SubscriptionFormModalProps) {
+  const [subscriptionType, setSubscriptionType] = useState<
+    "simple" | "variable" | "bundled" | null
+  >(null);
+
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+    },
+    mode: "onChange",
+  });
+
+  const {
+    control,
+    handleSubmit,
+    watch,
+    setValue,
+    reset,
+    formState: {},
+  } = form;
   const simpleBenefits = useFieldArray({
     control,
     name: "benefits",
@@ -240,7 +247,7 @@ export default function SubscriptionFormModal({
       description: "",
     });
     setSubscriptionType(null);
-    setOpen(false)
+    setOpen(false);
   };
 
   const handleOpenChange = (isOpen: boolean) => {
