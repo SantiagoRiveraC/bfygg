@@ -44,7 +44,6 @@ export default function SubscriptionSection() {
 
   const handleSubscriptionCreated = (subscription: FormValues) => {
     if (editingSubscription) {
-      // Actualizar suscripción existente
       setSubscriptions(
         subscriptions.map((sub) =>
           sub._id === subscription._id ? subscription : sub
@@ -52,7 +51,6 @@ export default function SubscriptionSection() {
       );
       setEditingSubscription(null);
     } else {
-      // Añadir nueva suscripción
       setSubscriptions([...subscriptions, subscription]);
     }
   };

@@ -43,7 +43,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import toast, { Toaster } from "react-hot-toast";
 
-// Define the schema for each subscription type (mantenido igual...)
 const baseSchema = z.object({
   _id: z.string().optional(),
   name: z.string().min(3, { message: "Name must be at least 3 characters" }),
@@ -96,7 +95,6 @@ const bundledSchema = baseSchema.extend({
     .min(1, { message: "At least one bundled item is required" }),
 });
 
-// Combine all schemas with discriminated union
 const formSchema = z.discriminatedUnion("type", [
   simpleSchema,
   variableSchema,
@@ -136,7 +134,6 @@ export default function SubscriptionFormModal({
       "simple" | "variable" | "bundled" | null
     >(null);
   
-    // Initialize form
     const form = useForm<FormValues>({
       resolver: zodResolver(formSchema),
       defaultValues: {
@@ -147,8 +144,6 @@ export default function SubscriptionFormModal({
     });
   
     const { control, handleSubmit, watch, setValue, reset, formState: {} } = form;
-
-  // Field arrays for dynamic fields
   const simpleBenefits = useFieldArray({
     control,
     name: "benefits",
@@ -164,8 +159,6 @@ export default function SubscriptionFormModal({
     name: "bundledItems",
   });
 
-  // Establecemos todos los field arrays para los beneficios de opciones variables desde el inicio
-  // Creamos field arrays para un máximo razonable de opciones (por ejemplo, 10)
   const maxOptionsCount = 10;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const variableBenefitsArrays: any = [];
@@ -178,11 +171,9 @@ export default function SubscriptionFormModal({
     });
   }
 
-  // Handle subscription type change
   const handleTypeChange = (value: "simple" | "variable" | "bundled") => {
     setSubscriptionType(value);
 
-    // Reset form with new type
     if (value === "simple") {
       setValue("type", "simple");
       setValue("benefits", [{ text: "" }]);
@@ -206,7 +197,6 @@ export default function SubscriptionFormModal({
     }
   };
 
-  // Handle form submission
   const onSubmit = (data: FormValues) => {
     const promise = isEdit
       ? axios.put(`/api/subscription/${initialData?._id}`, data)
@@ -232,11 +222,9 @@ export default function SubscriptionFormModal({
   useEffect(() => {
     if (open) {
       if (isEdit && initialData) {
-        // Modo edición - cargar datos existentes
         reset(initialData);
         setSubscriptionType(initialData.type);
       } else {
-        // Modo creación - resetear a valores iniciales
         reset({
           name: "",
           description: "",
@@ -246,7 +234,6 @@ export default function SubscriptionFormModal({
     }
   }, [open, isEdit, initialData, reset]);
 
-  // Función para resetear completamente
   const resetForm = () => {
     reset({
       name: "",
@@ -256,7 +243,6 @@ export default function SubscriptionFormModal({
     setOpen(false)
   };
 
-  // Manejar cierre del modal
   const handleOpenChange = (isOpen: boolean) => {
     setOpen(isOpen);
     if (!isOpen) {
@@ -264,7 +250,6 @@ export default function SubscriptionFormModal({
       if (onClose) onClose();
     }
   };
-
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -524,7 +509,6 @@ export default function SubscriptionFormModal({
                           <Accordion type="multiple" className="space-y-4">
                             {variableOptions.fields.map(
                               (option, optionIndex) => {
-                                // Utilizar los field arrays creados anteriormente
                                 const benefitsArray =
                                   variableBenefitsArrays[optionIndex];
 
