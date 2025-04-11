@@ -157,11 +157,11 @@ export default function UserTable({ users, handleDelete, handleEdit }: UserTable
 											</Button>
 										</DropdownMenuTrigger>
 										<DropdownMenuContent align="end">
-											<DropdownMenuItem onClick={() => handleEdit(user._id)} className="cursor-pointer">
+											<DropdownMenuItem onClick={() => handleEdit(user._id || '')} className="cursor-pointer">
 												<Edit className="h-4 w-4 mr-2" />
 												Edit
 											</DropdownMenuItem>
-											<DropdownMenuItem onClick={() => handleDelete(user._id)} className="cursor-pointer">
+											<DropdownMenuItem onClick={() => handleDelete(user._id || '')} className="cursor-pointer">
 												<Trash2 className="h-4 w-4 mr-2 text-red-500" />
 												Delete
 											</DropdownMenuItem>
